@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:developer' as dev;
-import 'dart:ui';
-
 import 'package:e_commerce_app/core/providers/core_providers.dart';
 import 'package:e_commerce_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';

@@ -40,6 +40,8 @@ Future<T> guardApi<T>(Future<T> Function() request) async {
     throw e.toFailure();
   } on Failure {
     rethrow;
+  } on TypeError {
+    throw const UnknownFailure('Unexpected response from the server.');
   } on Exception {
     throw const UnknownFailure('Unexpected response from the server.');
   }

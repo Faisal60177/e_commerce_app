@@ -51,3 +51,6 @@ final class UnknownFailure extends Failure {
     super.message = 'Something went wrong. Please try again.',
   ]);
 }
+
+String failureMessage(Object error) =>
+    error is Failure ? error.message : 'Something went wrong. Please try again.';
