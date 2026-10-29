@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'dart:convert';
+import 'dart:developer' as dev;
 import 'package:e_commerce_app/core/constants/api_constants.dart';
 import 'package:e_commerce_app/core/error/failure.dart';
 import 'package:e_commerce_app/core/models/paginated.dart';
@@ -86,37 +88,59 @@ class ProductRepositoryImpl  implements ProductRepository{
         required int limit,
         required int skip,
         required ProductSort sort,
-        Map<String ,dynamic> extraQuery = const{},
-  }) {
+        Map<String, dynamic> extraQuery = const {},
+      }) {
     return guardApi(() async {
       final json = await _get<Map<String, dynamic>>(
         path,
         query: {
-          'limit' : limit,
-          'skip' : skip,
-          'select' : ApiConstants.summaryFields,
+          'limit': limit,
+          'skip': skip,
+          'select': ApiConstants.summaryFields,
           ...sort.queryParameters,
           ...extraQuery,
         },
       );
 
+      final products = json['products'];
+      if (products is! List<dynamic>) {
+        throw const UnknownFailure('Unexpected response from the server.');
+      }
+
       return Paginated(
-        items: (json['products'] as List<dynamic>)
-            .map((e) => ProductSummary.fromJson(e as Map<String, dynamic>)).toList(),
-        total: json['total'] as int,
-        skip: json['skip'] as int,
-        limit: json['limit'] as int,
+        items: products
+            .map((e) => ProductSummary.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        total: (json['total'] as num?)?.toInt() ?? products.length,
+        skip: (json['skip'] as num?)?.toInt() ?? skip,
+        limit: (json['limit'] as num?)?.toInt() ?? limit,
       );
     });
   }
 
   Future<T> _get<T>(String path, {Map<String, dynamic>? query}) async {
-    final response = await _dio.get<T>(path, queryParameters: query);
-    final data = response.data;
-    if(data == null) {
-      throw const UnknownFailure('Empty response from the server.');
+    final response = await _dio.get<dynamic>(path, queryParameters: query);
+    var data = response.data;
+
+    // Some networks/proxies deliver JSON as plain text.
+    if (data is String) {
+      try {
+        data = jsonDecode(data);
+      } on FormatException {
+        data = null;
+      }
     }
-    return data;
+
+    if (data is T) return data;
+
+    final preview = '$data';
+    dev.log(
+      'Expected $T from $path but got ${data.runtimeType} '
+          '(content-type: ${response.headers.value(Headers.contentTypeHeader)}): '
+          '${preview.length > 200 ? preview.substring(0, 200) : preview}',
+      name: 'API',
+    );
+    throw const UnknownFailure('Unexpected response from the server.');
   }
 
 }

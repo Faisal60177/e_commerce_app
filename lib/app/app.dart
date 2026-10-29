@@ -18,6 +18,19 @@ class App  extends ConsumerWidget{
       darkTheme: AppTheme.dark,
       themeMode: themeMode,
       routerConfig: router,
+
+      builder: (context, child) {
+        final media = MediaQuery.of(context);
+        return MediaQuery(
+          data: media.copyWith(
+            textScaler: media.textScaler.clamp(
+              minScaleFactor: 0.9,
+              maxScaleFactor: 1.2,
+            ),
+          ),
+          child: child ?? const SizedBox.shrink(),
+        );
+      },
     );
   }
 }

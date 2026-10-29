@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:e_commerce_app/core/error/failure.dart';
+import 'dart:developer' as dev;
 
 extension DioExceptionX on DioException {
   Failure toFailure() {
@@ -40,9 +41,11 @@ Future<T> guardApi<T>(Future<T> Function() request) async {
     throw e.toFailure();
   } on Failure {
     rethrow;
-  } on TypeError {
+  } on TypeError catch (e, stack) {
+    dev.log('Bad response shape', name: 'API', error: e, stackTrace: stack);
     throw const UnknownFailure('Unexpected response from the server.');
-  } on Exception {
+  } on Exception catch (e, stack) {
+    dev.log('Unexpected error', name: 'API', error: e, stackTrace: stack);
     throw const UnknownFailure('Unexpected response from the server.');
   }
 }

@@ -7,7 +7,7 @@ abstract final class ApiConstants {
   static String productById(int id) => '/products/$id';
   static String productByCategory(String slug) => '/products/category/$slug';
 
-  static const summaryFields = 'title, price, thumbnail, rating, discountPercentage';
+  static const summaryFields = 'title,price,thumbnail,rating,discountPercentage';
 
   static const defaultPageSize = 20;
   static const connectTimeout = Duration(seconds: 15);
