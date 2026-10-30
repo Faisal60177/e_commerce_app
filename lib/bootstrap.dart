@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer' as dev;
+
 import 'package:e_commerce_app/core/providers/core_providers.dart';
 import 'package:e_commerce_app/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,10 +14,13 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {bbbbbbb
 
   FlutterError.onError = (details) {
     FlutterError.presentError(details);
-    dev.log('FlutterError', error: details.exception, stackTrace: details.stack);
-
+    dev.log(
+      'FlutterError',
+      error: details.exception,
+      stackTrace: details.stack,
+    );
   };
-  PlatformDispatcher.instance.onError =(error,stack) {
+  PlatformDispatcher.instance.onError = (error, stack) {
     dev.log('Uncaught error', error: error, stackTrace: stack);
     return true;
   };
@@ -27,7 +31,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {bbbbbbb
   runApp(
     ProviderScope(
       overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
-      child: await builder(),)
+      child: await builder(),
+    ),
   );
 }
-
