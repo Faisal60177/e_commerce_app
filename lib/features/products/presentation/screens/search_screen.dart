@@ -10,9 +10,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
   const SearchScreen({super.key});
+
   @override
   ConsumerState<SearchScreen> createState() => _SearchScreenState();
-
 }
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
@@ -29,26 +29,26 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   void _onChanged(String value) {
     final text = value.trim();
-    if(text.isEmpty) {
+    if (text.isEmpty) {
       _debouncer.cancel();
       setState(() => _query = '');
       return;
     }
-    setState(() {});
+    setState(() {}); // Refreshes the clear (x) button.
     _debouncer.run(() {
-      if(mounted) setState(() => _query = text);
+      if (mounted) setState(() => _query = text);
     });
   }
-  
+
   void _submit(String value) {
     final text = value.trim();
-    if(text.isEmpty) return;
+    if (text.isEmpty) return;
     _debouncer.cancel();
     setState(() => _query = text);
     ref.read(recentSearchesProvider.notifier).add(text);
   }
 
-  void _useRecent(String text){
+  void _useRecent(String text) {
     _controller.value = TextEditingValue(
       text: text,
       selection: TextSelection.collapsed(offset: text.length),
@@ -56,22 +56,23 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     _submit(text);
   }
 
-  void _clear(){
+  void _clear() {
     _debouncer.cancel();
     _controller.clear();
     setState(() => _query = '');
   }
 
   bool _onScroll(ScrollNotification notification) {
-    if(notification.depth == 0 && notification.metrics.extentAfter < 600) {
-      ref.read(productListProvider(ProductQuery(search: _query)).notifier)
+    if (notification.depth == 0 && notification.metrics.extentAfter < 600) {
+      ref
+          .read(productListProvider(ProductQuery(search: _query)).notifier)
           .loadMore();
-    }return false;
-
+    }
+    return false;
   }
 
-@override
-Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -84,66 +85,82 @@ Widget build(BuildContext context) {
           decoration: InputDecoration(
             hintText: 'Search products',
             isDense: true,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding:
+            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             suffixIcon: _controller.text.isEmpty
-              ? null
-                : IconButton(onPressed: _clear, icon: const Icon(Icons.close_rounded),
-            )
+                ? null
+                : IconButton(
+              icon: const Icon(Icons.close_rounded),
+              onPressed: _clear,
+            ),
           ),
         ),
-        actions: const [
-          SizedBox(width: 1)],
+        actions: const [SizedBox(width: 16)],
       ),
       body: _query.isEmpty
-      ? _RecentSearches(onSelect: _useRecent)
-      : NotificationListener<ScrollNotification>(
-          onNotification: _onScroll,
-          child: CustomScrollView(
-            slivers: [
-              const SliverToBoxAdapter(child: SizedBox(height: 8,),),
-              ProductGridSliver(query: ProductQuery(search: _query),
+          ? _RecentSearches(onSelect: _useRecent)
+          : NotificationListener<ScrollNotification>(
+        onNotification: _onScroll,
+        child: CustomScrollView(
+          slivers: [
+            const SliverToBoxAdapter(child: SizedBox(height: 8)),
+            ProductGridSliver(
+              query: ProductQuery(search: _query),
               emptyTitle: 'No results for "$_query"',
-                emptySubtitle: 'Try a different keyword.',
-              )
-            ],
-          )),
+              emptySubtitle: 'Try a different keyword.',
+            ),
+          ],
+        ),
+      ),
     );
-}
+  }
 }
 
-class _RecentSearches extends ConsumerWidget{
+class _RecentSearches extends ConsumerWidget {
   const _RecentSearches({required this.onSelect});
+
   final ValueChanged<String> onSelect;
 
-@override
-Widget build(BuildContext context, WidgetRef ref) {
-  final recent = ref.watch(recentSearchesProvider);
-  final notifier = ref.read(recentSearchesProvider.notifier);
-  
-  if(recent.isEmpty) {
-    return const AppEmptyView(icon: Icons.search_rounded,
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final recent = ref.watch(recentSearchesProvider);
+    final notifier = ref.read(recentSearchesProvider.notifier);
+
+    if (recent.isEmpty) {
+      return const AppEmptyView(
+        icon: Icons.search_rounded,
         title: 'Search for products',
-      subtitle: 'Try "phone", "laptop" or "shoes".',);
-  }
-  return ListView(
-    children: [
-      Padding(padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
-      child: Row(
-        children: [
-          Expanded(child: Text('Recent searches',style: context.textTheme.titleMedium,
-          )),
-          TextButton(onPressed: notifier.clear, child: const Text('Clear')),
-        ],
-      ),),
-      for (final query in recent)
-        ListTile(
-          leading: const Icon(Icons.history_rounded),
-          title: Text(query),
-          trailing: IconButton(onPressed: () => notifier.remove(query), icon: const Icon(Icons.close_rounded),
+        subtitle: 'Try "phone", "laptop" or "shoes".',
+      );
+    }
+
+    return ListView(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 8, 8, 0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Recent searches',
+                  style: context.textTheme.titleMedium,
+                ),
+              ),
+              TextButton(onPressed: notifier.clear, child: const Text('Clear')),
+            ],
           ),
-          onTap: () => onSelect(query),
-        )
-    ],
-  );
-}
+        ),
+        for (final query in recent)
+          ListTile(
+            leading: const Icon(Icons.history_rounded),
+            title: Text(query),
+            trailing: IconButton(
+              icon: const Icon(Icons.close_rounded),
+              onPressed: () => notifier.remove(query),
+            ),
+            onTap: () => onSelect(query),
+          ),
+      ],
+    );
+  }
 }

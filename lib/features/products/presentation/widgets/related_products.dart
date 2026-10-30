@@ -5,34 +5,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class RelatedProducts extends ConsumerWidget {
+  const RelatedProducts({
+    required this.category,
+    required this.productId,
+    super.key,
+  });
 
-const RelatedProducts({
-  required this.category,
-  required this.productId,
-  super.key,
-});
+  final String category;
+  final int productId;
 
-final String category;
-final int productId;
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final related = ref.watch(relatedProductsProvider(category, productId));
 
-@override
-Widget build(BuildContext context, WidgetRef ref) {
+    if (related.value?.isEmpty ?? false) return const SizedBox.shrink();
 
-  final related = ref.watch(relatedProductsProvider(category, productId));
-
-  if(related.value?.isEmpty ?? false) return const SizedBox.shrink();
-
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      const SectionHeader(title: 'You may also like'),
-      ProductHorizontalList(products: related, onRetry: () =>
-      ref.invalidate(relatedProductsProvider(category, productId)),
-      ),
-    ],
-  );
-}
-
-
-
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const SectionHeader(title: 'You may also like'),
+        ProductHorizontalList(
+          products: related,
+          onRetry: () =>
+              ref.invalidate(relatedProductsProvider(category, productId)),
+        ),
+      ],
+    );
+  }
 }

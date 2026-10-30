@@ -8,15 +8,13 @@ import 'package:e_commerce_app/features/products/presentation/widgets/sort_chips
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductListScreen extends ConsumerStatefulWidget{
-
+class ProductListScreen extends ConsumerStatefulWidget {
   const ProductListScreen({
     required this.title,
     this.category,
     this.initialSort = ProductSort.relevance,
     super.key,
   });
-
 
   final String title;
   final String? category;
@@ -27,20 +25,17 @@ class ProductListScreen extends ConsumerStatefulWidget{
 }
 
 class _ProductListScreenState extends ConsumerState<ProductListScreen> {
-
   late ProductSort _sort = widget.initialSort;
 
   ProductQuery get _query =>
-      ProductQuery(
-          category: widget.category, sort: _sort
-      );
+      ProductQuery(category: widget.category, sort: _sort);
 
   Future<void> _refresh() async {
     ref.invalidate(productListProvider(_query));
     try {
       await ref.read(productListProvider(_query).future);
     } on Failure {
-      return;
+      return; // The grid shows its own error state.
     }
   }
 
@@ -52,35 +47,39 @@ class _ProductListScreenState extends ConsumerState<ProductListScreen> {
   }
 
   @override
-  Widget build (BuildContext context)
-  {
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
         actions: [
-          IconButton(onPressed: context.openSearch, icon: const Icon(Icons.search_rounded),
+          IconButton(
+            icon: const Icon(Icons.search_rounded),
+            onPressed: context.openSearch,
           ),
         ],
       ),
-
-      body: RefreshIndicator(onRefresh: _refresh,
-          child: NotificationListener<ScrollNotification>(
-            onNotification: _onScroll,
-              child: CustomScrollView(
-                physics: const AlwaysScrollableScrollPhysics(),
-                slivers: [
-                  SliverToBoxAdapter(
-                    child: Padding(padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: SortChips(selected: _sort, onSelected: (sort) => setState (() => _sort = sort),
-
-                    ),
-                    ),
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: NotificationListener<ScrollNotification>(
+          onNotification: _onScroll,
+          child: CustomScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: SortChips(
+                    selected: _sort,
+                    onSelected: (sort) => setState(() => _sort = sort),
                   ),
-                  const SliverToBoxAdapter(child: SizedBox(height: 8,),),
-                  ProductGridSliver(query: _query),
-                ],
-              ))),
-
+                ),
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 8)),
+              ProductGridSliver(query: _query),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
