@@ -204,11 +204,11 @@ class _DetailSkeleton extends StatelessWidget {
     return const SingleChildScrollView(
       physics: NeverScrollableScrollPhysics(),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: .start,
         children: [
           ShimmerBox(height: 320, radius: 0),
           Padding(
-            padding: EdgeInsets.all(16),
+            padding: .all(16),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

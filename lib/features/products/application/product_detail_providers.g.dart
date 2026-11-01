@@ -135,7 +135,7 @@ final class RelatedProductsProvider
   }
 }
 
-String _$relatedProductsHash() => r'300e8b6da6a9587431df555586d206ba89952c82';
+String _$relatedProductsHash() => r'9147b8ba48f0fc0a07b26e26fd3c666588ec9b2a';
 
 final class RelatedProductsFamily extends $Family
     with
@@ -152,8 +152,8 @@ final class RelatedProductsFamily extends $Family
         isAutoDispose: true,
       );
 
-  RelatedProductsProvider call(String category, int excluded) =>
-      RelatedProductsProvider._(argument: (category, excluded), from: this);
+  RelatedProductsProvider call(String category, int excludeId) =>
+      RelatedProductsProvider._(argument: (category, excludeId), from: this);
 
   @override
   String toString() => r'relatedProductsProvider';

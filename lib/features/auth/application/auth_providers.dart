@@ -2,6 +2,7 @@ import 'package:e_commerce_app/core/providers/core_providers.dart';
 import 'package:e_commerce_app/features/auth/data/firebase_auth_repository.dart';
 import 'package:e_commerce_app/features/auth/domain/entities/app_user.dart';
 import 'package:e_commerce_app/features/auth/domain/repositories/auth_repository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_providers.g.dart';

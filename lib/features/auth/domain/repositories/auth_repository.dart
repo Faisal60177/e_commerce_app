@@ -13,7 +13,7 @@ abstract interface class AuthRepository {
   Future<void> signIn({
     required String email, required String password
 });
-  Future<bool> signWithGoogle();
+  Future<bool> signInWithGoogle();
   Future<void> sendVerificationEmail();
   Future<AppUser?> reloadUser();
   Future<void> sendPasswordReset(String email);

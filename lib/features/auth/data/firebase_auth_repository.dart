@@ -4,9 +4,9 @@ import 'package:e_commerce_app/features/auth/domain/entities/app_user.dart';
 import 'package:e_commerce_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class FirebaseAuthRepository  implements AuthRepository{
-
+class FirebaseAuthRepository implements AuthRepository {
   FirebaseAuthRepository(this._auth);
+
   final FirebaseAuth _auth;
 
   static const _cancelCodes = {
@@ -15,7 +15,6 @@ class FirebaseAuthRepository  implements AuthRepository{
     'web-context-canceled',
     'popup-closed-by-user',
     'cancelled-popup-request',
-
   };
 
   @override
@@ -29,9 +28,12 @@ class FirebaseAuthRepository  implements AuthRepository{
     required String name,
     required String email,
     required String password,
-}) {
+  }) {
     return _guard(() async {
-      final credential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      final credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
       final user = credential.user!;
       await user.updateDisplayName(name.trim());
       await user.sendEmailVerification();
@@ -51,9 +53,8 @@ class FirebaseAuthRepository  implements AuthRepository{
     try {
       await _auth.signInWithProvider(GoogleAuthProvider());
       return true;
-
-    } on FirebaseAuthException catch(e) {
-      if(_cancelCodes.contains(e.code)) return false;
+    } on FirebaseAuthException catch (e) {
+      if (_cancelCodes.contains(e.code)) return false;
       throw e.toAuthFailure();
     }
   }
@@ -62,7 +63,7 @@ class FirebaseAuthRepository  implements AuthRepository{
   Future<void> sendVerificationEmail() {
     return _guard(() async {
       final user = _auth.currentUser;
-      if(user == null) throw const AuthFailure('You are signed out.');
+      if (user == null) throw const AuthFailure('You are signed out.');
       await user.sendEmailVerification();
     });
   }
@@ -84,25 +85,23 @@ class FirebaseAuthRepository  implements AuthRepository{
   Future<void> signOut() => _guard(_auth.signOut);
 
   AppUser? _toAppUser(User? user) {
-    if(user == null) return null;
-    return AppUser(uid: user.uid,
-    email: user.email ?? '',
-    displayName: user.displayName,
-    photoUrl: user.photoURL,
-    emailVerified: user.emailVerified,);
+    if (user == null) return null;
+    return AppUser(
+      uid: user.uid,
+      email: user.email ?? '',
+      displayName: user.displayName,
+      photoUrl: user.photoURL,
+      emailVerified: user.emailVerified,
+    );
   }
 
   Future<T> _guard<T>(Future<T> Function() action) async {
     try {
       return await action();
     } on FirebaseAuthException catch (e) {
-      throw  e.toAuthFailure();
+      throw e.toAuthFailure();
     } on FirebaseException catch (e) {
       throw AuthFailure(e.message ?? 'Authentication failed.');
     }
-
   }
-
-
-
 }
