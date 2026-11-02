@@ -9,6 +9,7 @@ import 'package:e_commerce_app/features/auth/presentation/widgets/social_auth_se
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:e_commerce_app/features/auth/application/auth_providers.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
 
@@ -47,9 +48,16 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
 
 @override
 Widget build(BuildContext context) {
+  ref.listen(authUserProvider, (previous, next) {
+    final user = next.value;
+    if (user != null && user.emailVerified && context.canPop()) {
+      context.pop(true);
+    }
+  });
+
     ref.listen(authControllerProvider, (previous, next) {
       if(next.hasError && !next.isLoading) {
-        context.showSnackBar(failureMessage(next.error!), isError: true);
+        context.showSnack(failureMessage(next.error!), isError: true);
       }
     });
 

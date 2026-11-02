@@ -5,7 +5,7 @@ extension BuildContextX on BuildContext {
   TextTheme get textTheme => theme.textTheme;
   ColorScheme get colors => theme.colorScheme;
 
-  void showSnackBar(String message, {bool isError = false}) {
+  void showSnack(String message, {bool isError = false}) {
     ScaffoldMessenger.of(this)
         ..hideCurrentSnackBar()
         ..showSnackBar(

@@ -54,7 +54,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     final verified = 
         await ref.read(authControllerProvider.notifier).refreshUser();
     if(!verified && mounted) {
-      context.showSnackBar('Not verified yet. Check your inbox and spam folder.');
+      context.showSnack('Not verified yet. Check your inbox and spam folder.');
     }
   }
   
@@ -64,7 +64,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     if(!mounted) return;
     if(sent) {
       _startCooldown(_resendCooldown);
-      context.showSnackBar('Verification email sent');
+      context.showSnack('Verification email sent');
     }
   }
 
@@ -72,7 +72,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 Widget build(BuildContext context) {
     ref.listen(authControllerProvider, (previous, next) {
       if(next.hasError && !next.isLoading) {
-        context.showSnackBar(failureMessage(next.error!),isError: true);
+        context.showSnack(failureMessage(next.error!),isError: true);
       }
     });
     final isLoading = ref.watch(authControllerProvider).isLoading;

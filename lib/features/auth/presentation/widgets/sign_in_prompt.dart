@@ -32,7 +32,8 @@ Widget build(BuildContext context) {
           color: context.colors.onSurfaceVariant,
         ),),
         const SizedBox(height: 24,),
-        FilledButton(onPressed: () => context.pushNamed(RouteNames.login, queryParameters: {
+        FilledButton(onPressed: () => context.pushNamed(RouteNames.login,
+            queryParameters: {
           'from' : GoRouterState.of(context).uri.toString(),
         }), child: const Text('Sign in'),
         ),

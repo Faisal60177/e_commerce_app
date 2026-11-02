@@ -56,19 +56,19 @@ class AccountScreen extends ConsumerWidget {
                 _MenuTile(
                   icon: Icons.receipt_long_outlined,
                   label: 'My orders',
-                  onTap: () => context.showSnackBar('Coming in a later step'),
+                  onTap: () => context.showSnack('Coming in a later step'),
                 ),
                 const Divider(height: 1),
                 _MenuTile(
                   icon: Icons.location_on_outlined,
                   label: 'Addresses',
-                  onTap: () => context.showSnackBar('Coming in a later step'),
+                  onTap: () => context.showSnack('Coming in a later step'),
                 ),
                 const Divider(height: 1),
                 _MenuTile(
                   icon: Icons.settings_outlined,
                   label: 'Settings',
-                  onTap: () => context.showSnackBar('Coming in a later step'),
+                  onTap: () => context.showSnack('Coming in a later step'),
                 ),
               ],
             ),

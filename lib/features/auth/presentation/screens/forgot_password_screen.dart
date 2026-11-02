@@ -50,7 +50,7 @@ Widget build(BuildContext context) {
 
   ref.listen(authControllerProvider, (previous, next) {
     if (next.hasError && !next.isLoading) {
-      context.showSnackBar(failureMessage(next.error!), isError: true);
+      context.showSnack(failureMessage(next.error!), isError: true);
     }
   });
   

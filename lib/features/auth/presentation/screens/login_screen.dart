@@ -10,10 +10,13 @@ import 'package:e_commerce_app/features/auth/presentation/widgets/social_auth_se
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:e_commerce_app/features/auth/application/auth_providers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
 
-  const LoginScreen({super.key});
+  const LoginScreen({ this.redirectTo,super.key});
+
+  final String? redirectTo;
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
@@ -38,11 +41,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       password: _password.text,
     );
   }
+
+  void _leave() {
+    if (context.canPop()) {
+      context.pop(true);
+    } else {
+      final to = widget.redirectTo;
+      context.go(to != null && to.startsWith('/') ? to : RoutePaths.home);
+    }
+  }
+
 @override
 Widget build(BuildContext context) {
+  ref.listen(authUserProvider, (previous, next) {
+    final user = next.value;
+    if (user != null && user.emailVerified) _leave();
+  });
+
     ref.listen(authControllerProvider, (previous, next) {
       if(next.hasError && !next.isLoading) {
-        context.showSnackBar(failureMessage(next.error!), isError: true);
+        context.showSnack(failureMessage(next.error!), isError: true);
       }
     });
     final isLoading = ref.watch(authControllerProvider).isLoading;

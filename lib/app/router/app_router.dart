@@ -16,6 +16,7 @@ import 'package:e_commerce_app/features/profile/presentation/screens/account_scr
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:e_commerce_app/features/cart/presentation/screens/cart_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -47,10 +48,7 @@ String? _redirect(Ref ref, GoRouterState state) {
     return location == RoutePaths.verifyEmail ? null : RoutePaths.verifyEmail;
   }
 
-  if (location.startsWith(RoutePaths.authPrefix)) {
-    final from = state.uri.queryParameters['from'];
-    return (from != null && from.startsWith('/')) ? from : RoutePaths.home;
-  }
+  if (location == RoutePaths.verifyEmail) return RoutePaths.home;
   return null;
 }
 
@@ -92,7 +90,7 @@ GoRouter appRouter(Ref ref) {
                 path: RoutePaths.cart,
                 name: RouteNames.cart,
                 builder: (context, state) =>
-                const PlaceholderScreen(title: 'Cart'),
+                const CartScreen(),
               ),
             ],
           ),
@@ -158,7 +156,8 @@ GoRouter appRouter(Ref ref) {
       GoRoute(
         path: RoutePaths.login,
         name: RouteNames.login,
-        builder: (context, state) => const LoginScreen(),
+        builder: (context, state) =>
+            LoginScreen(redirectTo: state.uri.queryParameters['from']),
       ),
       GoRoute(
         path: RoutePaths.signup,
