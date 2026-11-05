@@ -10,6 +10,7 @@ import 'package:e_commerce_app/features/products/presentation/widgets/product_ca
 import 'package:e_commerce_app/features/products/presentation/widgets/product_card_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:e_commerce_app/features/wishlist/presentation/widgets/wishlist_button.dart';
 
 class ProductGridSliver extends ConsumerWidget {
 
@@ -64,7 +65,10 @@ Widget build(BuildContext context, WidgetRef ref) {
             gridDelegate: _delegate,
             itemCount: data.items.length, itemBuilder: (context, index) {
               final product = data.items[index];
-              return ProductCard(product: product, onTap: () => context.openProduct(product.id),
+              return ProductCard(
+                product: product, 
+                onTap: () => context.openProduct(product.id),
+                overlayAction: WishlistButton(product: product),
               );
         },
 

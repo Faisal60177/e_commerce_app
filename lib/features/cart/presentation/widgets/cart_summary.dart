@@ -57,7 +57,11 @@ Widget build(BuildContext context) {
             bold: true,
             ),
             const SizedBox(height: 12,),
-            FilledButton(onPressed: onCheckout, child: Text('Checkout(${totals.itemCount} items)'),
+            FilledButton(onPressed: onCheckout,
+              child: Text(
+                'Checkout · ${totals.itemCount} '
+                    '${totals.itemCount == 1 ? 'item' : 'items'}',
+              ),
             )
           ],
         ),)),

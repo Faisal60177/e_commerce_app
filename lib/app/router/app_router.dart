@@ -1,6 +1,5 @@
 import 'package:e_commerce_app/app/router/route_names.dart';
 import 'package:e_commerce_app/app/shell/main_shell.dart';
-import 'package:e_commerce_app/core/widgets/placeholder_screen.dart';
 import 'package:e_commerce_app/features/auth/application/auth_providers.dart';
 import 'package:e_commerce_app/features/auth/presentation/screens/forgot_password_screen.dart';
 import 'package:e_commerce_app/features/auth/presentation/screens/login_screen.dart';
@@ -15,6 +14,9 @@ import 'package:e_commerce_app/features/products/presentation/screens/search_scr
 import 'package:e_commerce_app/features/profile/presentation/screens/account_screen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:go_router/go_router.dart';
+import 'package:e_commerce_app/features/address/presentation/screens/address_form_screen.dart';
+import 'package:e_commerce_app/features/address/presentation/screens/addresses_screen.dart';
+import 'package:e_commerce_app/features/wishlist/presentation/screens/wishlist_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:e_commerce_app/features/cart/presentation/screens/cart_screen.dart';
 
@@ -99,8 +101,7 @@ GoRouter appRouter(Ref ref) {
               GoRoute(
                 path: RoutePaths.wishlist,
                 name: RouteNames.wishlist,
-                builder: (context, state) =>
-                const PlaceholderScreen(title: 'Wishlist'),
+                builder: (context, state) => const WishlistScreen(),
               ),
             ],
           ),
@@ -173,6 +174,23 @@ GoRouter appRouter(Ref ref) {
         path: RoutePaths.forgotPassword,
         name: RouteNames.forgotPassword,
         builder: (context, state) => const ForgotPasswordScreen(),
+      ),
+
+      GoRoute(
+        path: RoutePaths.addresses,
+        name: RouteNames.addresses,
+        builder: (context, state) => const AddressesScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.addAddress,
+        name: RouteNames.addAddress,
+        builder: (context, state) => const AddressFormScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.editAddress,
+        name: RouteNames.editAddress,
+        builder: (context, state) =>
+            AddressFormScreen(addressId: state.pathParameters['id']),
       ),
     ],
   );

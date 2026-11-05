@@ -13,6 +13,7 @@ import 'package:e_commerce_app/features/products/presentation/widgets/product_in
 import 'package:e_commerce_app/features/products/presentation/widgets/related_products.dart';
 import 'package:e_commerce_app/features/products/presentation/widgets/review_tile.dart';
 import 'package:flutter/material.dart';
+import 'package:e_commerce_app/features/wishlist/presentation/widgets/wishlist_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class ProductDetailScreen extends ConsumerWidget {
@@ -26,7 +27,12 @@ class ProductDetailScreen extends ConsumerWidget {
     final data = product.value;
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          if (data != null)
+            WishlistButton(product: data.toSummary(), onCard: false),
+        ],
+      ),
       body: product.when(
         loading: () => const _DetailSkeleton(),
         error: (error, stackTrace) => AppErrorView(

@@ -6,6 +6,8 @@ import 'package:e_commerce_app/features/auth/domain/entities/app_user.dart';
 import 'package:e_commerce_app/features/auth/presentation/widgets/sign_in_prompt.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:e_commerce_app/app/router/route_names.dart';
+import 'package:go_router/go_router.dart';
 
 class AccountScreen extends ConsumerWidget {
   const AccountScreen({super.key});
@@ -62,7 +64,7 @@ class AccountScreen extends ConsumerWidget {
                 _MenuTile(
                   icon: Icons.location_on_outlined,
                   label: 'Addresses',
-                  onTap: () => context.showSnack('Coming in a later step'),
+                  onTap: () => context.pushNamed(RouteNames.addresses),
                 ),
                 const Divider(height: 1),
                 _MenuTile(

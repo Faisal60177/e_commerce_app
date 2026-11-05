@@ -15,6 +15,10 @@ abstract final class RoutePaths {
   static const verifyEmail = '/auth/verify-email';
   static const forgotPassword = '/auth/forgot-password';
   static const authPrefix = '/auth';
+
+  static const addresses = '/addresses';
+  static const addAddress = '/addresses/new';
+  static const editAddress = '/addresses/:id/edit';
 }
 
 abstract final class RouteNames {
@@ -33,4 +37,8 @@ abstract final class RouteNames {
   static const signup = 'signup';
   static const verifyEmail = 'verify-email';
   static const forgotPassword = 'forgot-password';
+
+  static const addresses = 'addresses';
+  static const addAddress = 'add-address';
+  static const editAddress = 'edit-address';
 }

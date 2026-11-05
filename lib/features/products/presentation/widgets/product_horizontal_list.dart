@@ -6,6 +6,7 @@ import 'package:e_commerce_app/features/products/presentation/widgets/product_ca
 import 'package:e_commerce_app/features/products/presentation/widgets/product_card_skeleton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:e_commerce_app/features/wishlist/presentation/widgets/wishlist_button.dart';
 
 class ProductHorizontalList extends StatelessWidget {
   const ProductHorizontalList({
@@ -48,6 +49,7 @@ class ProductHorizontalList extends StatelessWidget {
               child: ProductCard(
                 product: product,
                 onTap: () => context.openProduct(product.id),
+                overlayAction: WishlistButton(product: product),
               ),
             );
           },

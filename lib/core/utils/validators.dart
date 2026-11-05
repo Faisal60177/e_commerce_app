@@ -20,6 +20,17 @@ abstract final class Validators {
     return null;
   }
 
+  static String? phone(String? value) {
+    final text = value?.trim() ?? '';
+    if (text.isEmpty) return 'Phone number is required';
+    final digits = text.replaceAll(RegExp(r'\D'), '');
+    final validChars = RegExp(r'^\+?[\d\s\-()]+$').hasMatch(text);
+    if (!validChars || digits.length < 7 || digits.length > 15) {
+      return 'Enter a valid phone number';
+    }
+    return null;
+  }
+
   static String? password(String? value) {
     final text = value ?? '';
     if (text.isEmpty) return 'Password is required';
