@@ -95,17 +95,12 @@ final class AddressesProvider
 
 String _$addressesHash() => r'feb73da61e7529bf658540352b5afac2355a3abe';
 
-/// The address checkout pre-selects (`null` when none saved).
-
 @ProviderFor(defaultAddress)
 final defaultAddressProvider = DefaultAddressProvider._();
-
-/// The address checkout pre-selects (`null` when none saved).
 
 final class DefaultAddressProvider
     extends $FunctionalProvider<Address?, Address?, Address?>
     with $Provider<Address?> {
-  /// The address checkout pre-selects (`null` when none saved).
   DefaultAddressProvider._()
     : super(
         from: null,

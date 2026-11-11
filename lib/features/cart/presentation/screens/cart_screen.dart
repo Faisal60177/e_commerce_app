@@ -149,8 +149,8 @@ Widget build(BuildContext context) {
             ),
       ),
       bottomNavigationBar: items.isEmpty ? null 
-      : CartSummary(totals: CartTotals.from(items), 
-          onCheckout: () => context.showSnack('Checkout arrives in a later step'),
+      : CartSummary(totals: CartTotals.from(items),
+        onCheckout: () => context.pushNamed(RouteNames.checkout),
       ),
     );
 }

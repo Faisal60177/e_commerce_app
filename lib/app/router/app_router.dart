@@ -19,10 +19,19 @@ import 'package:e_commerce_app/features/address/presentation/screens/addresses_s
 import 'package:e_commerce_app/features/wishlist/presentation/screens/wishlist_screen.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:e_commerce_app/features/cart/presentation/screens/cart_screen.dart';
+import 'package:e_commerce_app/features/checkout/presentation/screens/checkout_screen.dart';
+import 'package:e_commerce_app/features/orders/presentation/screens/order_detail_screen.dart';
+import 'package:e_commerce_app/features/orders/presentation/screens/order_success_screen.dart';
+import 'package:e_commerce_app/features/orders/presentation/screens/orders_screen.dart';
 
 part 'app_router.g.dart';
 
-const _protectedPrefixes = ['/checkout', '/orders', '/addresses'];
+const _protectedPrefixes = [
+  '/checkout',
+  '/orders',
+  '/order-success',
+  '/addresses',
+];
 
 class _AuthRefresh extends ChangeNotifier {
   void notify() => notifyListeners();
@@ -191,6 +200,29 @@ GoRouter appRouter(Ref ref) {
         name: RouteNames.editAddress,
         builder: (context, state) =>
             AddressFormScreen(addressId: state.pathParameters['id']),
+      ),
+
+      GoRoute(
+        path: RoutePaths.checkout,
+        name: RouteNames.checkout,
+        builder: (context, state) => const CheckoutScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.orders,
+        name: RouteNames.orders,
+        builder: (context, state) => const OrdersScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.orderDetail,
+        name: RouteNames.orderDetail,
+        builder: (context, state) =>
+            OrderDetailScreen(orderId: state.pathParameters['id'] ?? ''),
+      ),
+      GoRoute(
+        path: RoutePaths.orderSuccess,
+        name: RouteNames.orderSuccess,
+        builder: (context, state) =>
+            OrderSuccessScreen(orderId: state.pathParameters['id'] ?? ''),
       ),
     ],
   );

@@ -19,7 +19,6 @@ Stream<List<Address>> addresses(Ref ref) {
   return ref.watch(addressRepositoryProvider).watchAddresses(uid);
 }
 
-/// The address checkout pre-selects (`null` when none saved).
 @Riverpod(keepAlive: true)
 Address? defaultAddress(Ref ref) {
   final list = ref.watch(addressesProvider).value;

@@ -46,6 +46,6 @@ class CartTotals {
       : math.max(0, PriceUtils.roundMoney(CartConstants.freeShippingThreshold - itemsTotal,
   ),
   );
-  double get freeShippinProgress =>
+  double get freeShippingProgress =>
       math.min(1.0, itemsTotal / CartConstants.freeShippingThreshold);
 }

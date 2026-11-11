@@ -58,7 +58,7 @@ class AccountScreen extends ConsumerWidget {
                 _MenuTile(
                   icon: Icons.receipt_long_outlined,
                   label: 'My orders',
-                  onTap: () => context.showSnack('Coming in a later step'),
+                  onTap: () => context.pushNamed(RouteNames.orders),
                 ),
                 const Divider(height: 1),
                 _MenuTile(

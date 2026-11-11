@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-/// Adds an address, or edits one when [addressId] is given.
 class AddressFormScreen extends ConsumerWidget {
   const AddressFormScreen({this.addressId, super.key});
 
@@ -88,7 +87,6 @@ class _AddressFormState extends ConsumerState<_AddressForm> {
   late bool _isDefault = widget.initial?.isDefault ?? widget.isFirst;
   bool _saving = false;
 
-  /// The first address, or the current default, cannot be switched off here.
   bool get _defaultLocked => widget.initial?.isDefault ?? widget.isFirst;
 
   @override
