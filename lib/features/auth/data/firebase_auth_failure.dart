@@ -20,6 +20,8 @@ extension FirebaseAuthExceptionX  on FirebaseAuthException {
       'operation-not-allowed' => 'This sign-in method is not enabled.',
       'account-exists-with-different-credential' =>
       'This email is registered with a different sign-in method.',
+      'requires-recent-login' =>
+      'For your security, please sign in again and retry.',
       _ => message ?? 'Authentication failed. Please try again.',
     };
     return AuthFailure(text);

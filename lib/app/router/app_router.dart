@@ -23,6 +23,9 @@ import 'package:e_commerce_app/features/checkout/presentation/screens/checkout_s
 import 'package:e_commerce_app/features/orders/presentation/screens/order_detail_screen.dart';
 import 'package:e_commerce_app/features/orders/presentation/screens/order_success_screen.dart';
 import 'package:e_commerce_app/features/orders/presentation/screens/orders_screen.dart';
+import 'package:e_commerce_app/features/profile/presentation/screens/change_password_screen.dart';
+import 'package:e_commerce_app/features/profile/presentation/screens/edit_profile_screen.dart';
+import 'package:e_commerce_app/features/settings/presentation/screens/settings_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -31,6 +34,7 @@ const _protectedPrefixes = [
   '/orders',
   '/order-success',
   '/addresses',
+  '/profile',
 ];
 
 class _AuthRefresh extends ChangeNotifier {
@@ -223,6 +227,21 @@ GoRouter appRouter(Ref ref) {
         name: RouteNames.orderSuccess,
         builder: (context, state) =>
             OrderSuccessScreen(orderId: state.pathParameters['id'] ?? ''),
+      ),
+      GoRoute(
+        path: RoutePaths.editProfile,
+        name: RouteNames.editProfile,
+        builder: (context, state) => const EditProfileScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.changePassword,
+        name: RouteNames.changePassword,
+        builder: (context, state) => const ChangePasswordScreen(),
+      ),
+      GoRoute(
+        path: RoutePaths.settings,
+        name: RouteNames.settings,
+        builder: (context, state) => const SettingsScreen(),
       ),
     ],
   );

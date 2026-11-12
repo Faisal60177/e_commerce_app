@@ -24,6 +24,10 @@ abstract final class RoutePaths {
   static const orders = '/orders';
   static const orderDetail = '/orders/:id';
   static const orderSuccess = '/order-success/:id';
+
+  static const editProfile = '/profile/edit';
+  static const changePassword = '/profile/change-password';
+  static const settings = '/settings';
 }
 
 abstract final class RouteNames {
@@ -51,4 +55,8 @@ abstract final class RouteNames {
   static const orders = 'orders';
   static const orderDetail = 'order-detail';
   static const orderSuccess = 'order-success';
+
+  static const editProfile = 'edit-profile';
+  static const changePassword = 'change-password';
+  static const settings = 'settings';
 }

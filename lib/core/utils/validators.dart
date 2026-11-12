@@ -48,4 +48,9 @@ abstract final class Validators {
       return null;
     };
   }
+
+  static String? optionalPhone(String? value) {
+    if (value == null || value.trim().isEmpty) return null;
+    return phone(value);
+  }
 }

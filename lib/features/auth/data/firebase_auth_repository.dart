@@ -61,11 +61,7 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> sendVerificationEmail() {
-    return _guard(() async {
-      final user = _auth.currentUser;
-      if (user == null) throw const AuthFailure('You are signed out.');
-      await user.sendEmailVerification();
-    });
+    return _guard(() => _requireUser().sendEmailVerification());
   }
 
   @override
@@ -82,7 +78,68 @@ class FirebaseAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<void> updateDisplayName(String name) {
+    return _guard(() async {
+      final user = _requireUser();
+      await user.updateDisplayName(name.trim());
+      await user.reload();
+    });
+  }
+
+  @override
+  Future<void> changePassword({
+    required String currentPassword,
+    required String newPassword,
+  }) {
+    return _guard(() async {
+      await _reauthWithPassword(currentPassword);
+      await _requireUser().updatePassword(newPassword);
+    });
+  }
+
+  @override
+  Future<void> reauthenticate({String? password}) async {
+    final user = _requireUser();
+    final usesPassword =
+    user.providerData.any((p) => p.providerId == 'password');
+
+    if (usesPassword) {
+      if (password == null || password.isEmpty) {
+        throw const AuthFailure('Please enter your password.');
+      }
+      return _guard(() => _reauthWithPassword(password));
+    }
+
+    try {
+      await user.reauthenticateWithProvider(GoogleAuthProvider());
+    } on FirebaseAuthException catch (e) {
+      if (_cancelCodes.contains(e.code)) {
+        throw const AuthFailure('Verification was cancelled.');
+      }
+      throw e.toAuthFailure();
+    }
+  }
+
+  @override
+  Future<void> deleteAccount() => _guard(() => _requireUser().delete());
+
+  @override
   Future<void> signOut() => _guard(_auth.signOut);
+
+  User _requireUser() {
+    return _auth.currentUser ?? (throw const AuthFailure('You are signed out.'));
+  }
+
+  Future<void> _reauthWithPassword(String password) async {
+    final user = _requireUser();
+    final email = user.email;
+    if (email == null) {
+      throw const AuthFailure('This account has no email address.');
+    }
+    await user.reauthenticateWithCredential(
+      EmailAuthProvider.credential(email: email, password: password),
+    );
+  }
 
   AppUser? _toAppUser(User? user) {
     if (user == null) return null;
@@ -92,6 +149,7 @@ class FirebaseAuthRepository implements AuthRepository {
       displayName: user.displayName,
       photoUrl: user.photoURL,
       emailVerified: user.emailVerified,
+      hasPassword: user.providerData.any((p) => p.providerId == 'password'),
     );
   }
 

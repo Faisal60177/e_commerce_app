@@ -1,12 +1,13 @@
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:e_commerce_app/app/router/route_names.dart';
 import 'package:e_commerce_app/core/utils/extensions.dart';
 import 'package:e_commerce_app/features/auth/application/auth_controller.dart';
 import 'package:e_commerce_app/features/auth/application/auth_providers.dart';
 import 'package:e_commerce_app/features/auth/domain/entities/app_user.dart';
 import 'package:e_commerce_app/features/auth/presentation/widgets/sign_in_prompt.dart';
+import 'package:e_commerce_app/features/profile/application/profile_providers.dart';
+import 'package:e_commerce_app/features/profile/presentation/widgets/user_avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:e_commerce_app/app/router/route_names.dart';
 import 'package:go_router/go_router.dart';
 
 class AccountScreen extends ConsumerWidget {
@@ -40,7 +41,16 @@ class AccountScreen extends ConsumerWidget {
     final user = ref.watch(authUserProvider).value;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Account')),
+      appBar: AppBar(
+        title: const Text('Account'),
+        actions: [
+          IconButton(
+            tooltip: 'Settings',
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => context.pushNamed(RouteNames.settings),
+          ),
+        ],
+      ),
       body: user == null
           ? const SignInPrompt(
         icon: Icons.person_outline_rounded,
@@ -62,15 +72,27 @@ class AccountScreen extends ConsumerWidget {
                 ),
                 const Divider(height: 1),
                 _MenuTile(
+                  icon: Icons.favorite_border_rounded,
+                  label: 'Wishlist',
+                  onTap: () => context.goNamed(RouteNames.wishlist),
+                ),
+                const Divider(height: 1),
+                _MenuTile(
                   icon: Icons.location_on_outlined,
                   label: 'Addresses',
                   onTap: () => context.pushNamed(RouteNames.addresses),
                 ),
                 const Divider(height: 1),
                 _MenuTile(
+                  icon: Icons.person_outline_rounded,
+                  label: 'Edit profile',
+                  onTap: () => context.pushNamed(RouteNames.editProfile),
+                ),
+                const Divider(height: 1),
+                _MenuTile(
                   icon: Icons.settings_outlined,
                   label: 'Settings',
-                  onTap: () => context.showSnack('Coming in a later step'),
+                  onTap: () => context.pushNamed(RouteNames.settings),
                 ),
               ],
             ),
@@ -87,30 +109,19 @@ class AccountScreen extends ConsumerWidget {
   }
 }
 
-class _ProfileHeader extends StatelessWidget {
+class _ProfileHeader extends ConsumerWidget {
   const _ProfileHeader({required this.user});
 
   final AppUser user;
 
   @override
-  Widget build(BuildContext context) {
-    final photo = user.photoUrl;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final profile = ref.watch(userProfileProvider).value;
+    final phone = profile?.phone ?? '';
 
     return Row(
       children: [
-        CircleAvatar(
-          radius: 36,
-          backgroundColor: context.colors.primaryContainer,
-          backgroundImage: photo == null ? null : CachedNetworkImageProvider(photo),
-          child: photo == null
-              ? Text(
-            user.initial,
-            style: context.textTheme.headlineSmall?.copyWith(
-              color: context.colors.onPrimaryContainer,
-            ),
-          )
-              : null,
-        ),
+        UserAvatar(user: user, avatarIndex: profile?.avatarIndex ?? 0),
         const SizedBox(width: 16),
         Expanded(
           child: Column(
@@ -124,8 +135,20 @@ class _ProfileHeader extends StatelessWidget {
                   color: context.colors.onSurfaceVariant,
                 ),
               ),
+              if (phone.isNotEmpty)
+                Text(
+                  phone,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colors.onSurfaceVariant,
+                  ),
+                ),
             ],
           ),
+        ),
+        IconButton(
+          tooltip: 'Edit profile',
+          icon: const Icon(Icons.edit_outlined),
+          onPressed: () => context.pushNamed(RouteNames.editProfile),
         ),
       ],
     );

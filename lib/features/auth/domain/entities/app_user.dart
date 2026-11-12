@@ -10,6 +10,7 @@ abstract class AppUser with _$AppUser {
     String? displayName,
     String? photoUrl,
     @Default(false) bool emailVerified,
+    @Default(false) bool hasPassword,
   }) = _AppUser;
 
   const AppUser._();
