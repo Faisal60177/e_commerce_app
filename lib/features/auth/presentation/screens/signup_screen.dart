@@ -1,3 +1,4 @@
+import 'package:e_commerce_app/app/router/route_names.dart';
 import 'package:e_commerce_app/core/utils/validators.dart';
 import 'package:e_commerce_app/features/auth/application/auth_controller.dart';
 import 'package:e_commerce_app/features/auth/presentation/widgets/auth_header.dart';
@@ -136,7 +137,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                   children: [
                     const Text('Already have an account?'),
                     TextButton(
-                      onPressed: context.pop,
+                      onPressed: () => context.canPop() ? context.pop()
+                      : context.goNamed(RouteNames.login),
                       child: const Text('Sign in'),
                     ),
                   ],
