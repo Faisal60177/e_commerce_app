@@ -12,8 +12,8 @@ enum OrderStatus {
   static const progress = [pending, confirmed, shipped, delivered];
 
   static OrderStatus? tryParse(String? name) {
-    for(final status in values) {
-      if(status.name == name) return status;
+    for (final status in values) {
+      if (status.name == name) return status;
     }
     return null;
   }
@@ -22,11 +22,10 @@ enum OrderStatus {
   bool get isFinal => this == delivered || this == cancelled;
   bool get canCancel => this == pending;
 
-  OrderStatus? get next => switch(this) {
+  OrderStatus? get next => switch (this) {
     OrderStatus.pending => OrderStatus.confirmed,
-  OrderStatus.confirmed => OrderStatus.shipped,
-  OrderStatus.shipped => OrderStatus.delivered,
-  OrderStatus.delivered || OrderStatus.cancelled => null,
+    OrderStatus.confirmed => OrderStatus.shipped,
+    OrderStatus.shipped => OrderStatus.delivered,
+    OrderStatus.delivered || OrderStatus.cancelled => null,
   };
-
 }

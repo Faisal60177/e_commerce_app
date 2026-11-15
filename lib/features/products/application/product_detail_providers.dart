@@ -12,10 +12,10 @@ Future<Product> productDetail(Ref ref, int id) {
 
 @riverpod
 Future<List<ProductSummary>> relatedProducts(
-    Ref ref,
-    String category,
-    int excludeId,
-    ) async {
+  Ref ref,
+  String category,
+  int excludeId,
+) async {
   final page = await ref
       .watch(productRepositoryProvider)
       .getProductsByCategory(category, limit: 11);

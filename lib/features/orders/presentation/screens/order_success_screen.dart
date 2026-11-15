@@ -55,9 +55,9 @@ class OrderSuccessScreen extends ConsumerWidget {
                     order == null
                         ? 'Thank you for your order.'
                         : 'Thank you! Your order #${order.number} is on its way '
-                        'to being confirmed.\n'
-                        'Total ${Formatters.price(order.total)} · '
-                        '${order.paymentMethod.title}',
+                              'to being confirmed.\n'
+                              'Total ${Formatters.price(order.total)} · '
+                              '${order.paymentMethod.title}',
                     textAlign: TextAlign.center,
                     style: context.textTheme.bodyLarge?.copyWith(
                       color: context.colors.onSurfaceVariant,

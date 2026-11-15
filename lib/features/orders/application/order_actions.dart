@@ -84,7 +84,7 @@ class OrderActions {
       if (item.quantity > product.stock) {
         throw ValidationFailure(
           'Only ${product.stock} of "${product.title}" left. '
-              'Please update your cart.',
+          'Please update your cart.',
         );
       }
 

@@ -30,10 +30,8 @@ class ProductHorizontalList extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           itemCount: 4,
           separatorBuilder: (context, index) => const SizedBox(width: 12),
-          itemBuilder: (context, index) => const SizedBox(
-            width: _cardWidth,
-            child: ProductCardSkeleton(),
-          ),
+          itemBuilder: (context, index) =>
+              const SizedBox(width: _cardWidth, child: ProductCardSkeleton()),
         ),
         error: (error, stackTrace) =>
             InlineError(message: failureMessage(error), onRetry: onRetry),

@@ -15,7 +15,7 @@ class ProfileActions {
 
   String get _uid {
     final uid = _ref.read(currentUidProvider);
-    if(uid == null) throw const AuthFailure('Please sign in first');
+    if (uid == null) throw const AuthFailure('Please sign in first');
     return uid;
   }
 
@@ -23,28 +23,33 @@ class ProfileActions {
     required String name,
     required String phone,
     required int avatarIndex,
-}) async {
+  }) async {
     final uid = _uid;
     final auth = _ref.read(authRepositoryProvider);
     final current = _ref.read(authUserProvider).value;
 
-    if(current?.displayName?.trim() != name.trim()) {
+    if (current?.displayName?.trim() != name.trim()) {
       await auth.updateDisplayName(name);
     }
-    await _ref.read(profileRepositoryProvider).saveProfile(
-      uid, UserProfile(phone: phone.trim(), avatarIndex: avatarIndex),
-    );
+    await _ref
+        .read(profileRepositoryProvider)
+        .saveProfile(
+          uid,
+          UserProfile(phone: phone.trim(), avatarIndex: avatarIndex),
+        );
     _ref.invalidate(authUserProvider);
   }
 
   Future<void> changePassword({
     required String currentPassword,
     required String newPassword,
-}) {
-    return _ref.read(authRepositoryProvider).changePassword(
-      currentPassword: currentPassword,
-      newPassword: newPassword,
-    );
+  }) {
+    return _ref
+        .read(authRepositoryProvider)
+        .changePassword(
+          currentPassword: currentPassword,
+          newPassword: newPassword,
+        );
   }
 
   Future<void> deleteAccount({String? password}) async {

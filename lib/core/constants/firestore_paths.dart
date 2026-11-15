@@ -6,5 +6,4 @@ abstract final class FirestorePaths {
   static String wishlist(String uid) => 'users/$uid/wishlist';
   static String addresses(String uid) => 'users/$uid/addresses';
   static String orders(String uid) => 'users/$uid/orders';
-
 }

@@ -1,4 +1,4 @@
-sealed class Failure  implements Exception{
+sealed class Failure implements Exception {
   const Failure(this.message);
 
   final String message;
@@ -8,16 +8,14 @@ sealed class Failure  implements Exception{
 }
 
 final class NetworkFailure extends Failure {
-  const NetworkFailure([super.message =
-  'No internet connection. Please check your network.',
+  const NetworkFailure([
+    super.message = 'No internet connection. Please check your network.',
   ]);
 }
 
 final class TimeoutFailure extends Failure {
   const TimeoutFailure([
-    super.message =
-    'The request timed out. Please try again.',
-
+    super.message = 'The request timed out. Please try again.',
   ]);
 }
 
@@ -36,11 +34,27 @@ final class NotFoundFailure extends Failure {
   ]);
 }
 
-final class AuthFailure extends Failure {
-  const AuthFailure(super.message);
+enum AuthFailureCode {
+  invalidCredentials,
+  invalidEmail,
+  emailInUse,
+  weakPassword,
+  accountDisabled,
+  tooManyRequests,
+  network,
+  requiresRecentLogin,
+  differentProvider,
+  cancelled,
+  unknown,
 }
 
-final class DatabaseFailure extends Failure{
+final class AuthFailure extends Failure {
+  const AuthFailure(super.message, {this.code = AuthFailureCode.unknown});
+
+  final AuthFailureCode code;
+}
+
+final class DatabaseFailure extends Failure {
   const DatabaseFailure([
     super.message = 'Could not complete the database operation.',
   ]);
@@ -52,8 +66,9 @@ final class UnknownFailure extends Failure {
   ]);
 }
 
-String failureMessage(Object error) =>
-    error is Failure ? error.message : 'Something went wrong. Please try again.';
+String failureMessage(Object error) => error is Failure
+    ? error.message
+    : 'Something went wrong. Please try again.';
 
 final class ValidationFailure extends Failure {
   const ValidationFailure(super.message);

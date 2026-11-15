@@ -12,6 +12,5 @@ abstract final class AvatarPalette {
     Color(0xFF64748B),
   ];
 
-  static Color colorAt(int index) =>
-      colors[index.clamp(0, colors.length - 1)];
+  static Color colorAt(int index) => colors[index.clamp(0, colors.length - 1)];
 }

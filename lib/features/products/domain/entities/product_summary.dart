@@ -4,7 +4,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'product_summary.freezed.dart';
 part 'product_summary.g.dart';
 
-
 @freezed
 abstract class ProductSummary with _$ProductSummary {
   const factory ProductSummary({
@@ -21,8 +20,8 @@ abstract class ProductSummary with _$ProductSummary {
   factory ProductSummary.fromJson(Map<String, dynamic> json) =>
       _$ProductSummaryFromJson(json);
 
-  bool get hasDiscount =>  discountPercentage > 0;
+  bool get hasDiscount => discountPercentage > 0;
 
   double get discountedPrice =>
-        PriceUtils.applyDiscount(price, discountPercentage);
+      PriceUtils.applyDiscount(price, discountPercentage);
 }

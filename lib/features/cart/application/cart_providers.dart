@@ -15,12 +15,12 @@ CartRepository cartRepository(Ref ref) {
 @Riverpod(keepAlive: true)
 Stream<List<CartItem>> cartItems(Ref ref) {
   final uid = ref.watch(currentUidProvider);
-  if(uid == null) return Stream.value(const <CartItem>[]);
+  if (uid == null) return Stream.value(const <CartItem>[]);
   return ref.watch(cartRepositoryProvider).watchCart(uid);
 }
 
 @Riverpod(keepAlive: true)
 int cartCount(Ref ref) {
   final items = ref.watch(cartItemsProvider).value ?? const <CartItem>[];
-  return items.fold<int>(0, (sum,item) => sum + item.quantity);
+  return items.fold<int>(0, (sum, item) => sum + item.quantity);
 }

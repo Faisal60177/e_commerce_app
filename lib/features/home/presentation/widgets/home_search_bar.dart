@@ -19,7 +19,10 @@ class HomeSearchBar extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                Icon(Icons.search_rounded, color: context.colors.onSurfaceVariant),
+                Icon(
+                  Icons.search_rounded,
+                  color: context.colors.onSurfaceVariant,
+                ),
                 const SizedBox(width: 12),
                 Text(
                   'Search products',

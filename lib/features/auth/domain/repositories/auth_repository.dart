@@ -8,11 +8,9 @@ abstract interface class AuthRepository {
     required String name,
     required String email,
     required String password,
-});
+  });
 
-  Future<void> signIn({
-    required String email, required String password
-});
+  Future<void> signIn({required String email, required String password});
   Future<bool> signInWithGoogle();
   Future<void> sendVerificationEmail();
   Future<AppUser?> reloadUser();
@@ -26,5 +24,5 @@ abstract interface class AuthRepository {
 
   Future<void> reauthenticate({String? password});
   Future<void> deleteAccount();
-  Future <void> signOut();
+  Future<void> signOut();
 }

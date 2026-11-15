@@ -34,15 +34,17 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
 
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
-    if(!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) return;
 
-    setState(() => _saving =true);
+    setState(() => _saving = true);
 
     try {
-      await ref.read(profileActionsProvider).changePassword(
-        currentPassword: _current.text,
-        newPassword: _new.text,
-      );
+      await ref
+          .read(profileActionsProvider)
+          .changePassword(
+            currentPassword: _current.text,
+            newPassword: _new.text,
+          );
       if (!mounted) return;
       context
         ..showSnack('Password updated')
@@ -54,60 +56,69 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
     }
   }
 
-@override
-Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     final user = ref.watch(authUserProvider).value;
-    
-    return Scaffold(
-      appBar: AppBar(title:  const Text('Change password'),),
-      body: SafeArea(child: user != null && !user.hasPassword
-      ? Padding(padding: const.all(24),
-      child: Text(
-        'Your account signs in with Google, so there is no password '
-            'to change.',
-        style: context.textTheme.bodyLarge,
-      ),)
-      : SingleChildScrollView(
-        padding: const.all(16),
-        child: Form(
-          key: _formKey,
-            autovalidateMode: .onUserInteraction,
-            child: Column(
-              crossAxisAlignment: .stretch,
-              children: [
-                PasswordField(controller: _current,label: 'Current Password',
-                textInputAction: .next,
-                validator: (v) =>
-                  Validators.required(v, 'Current password'),
-                ),
-                const SizedBox(height: 16,),
-                PasswordField(controller: _new,
-                label: 'New password',
-                textInputAction: .next,
-                validator: (value) {
-                  final error = Validators.password(value);
-                  if(error != null) return error;
-                  if(value == _current.text) {
-                    return 'Choose a different password';
-                  }
-                  return null;
-                },),
-                const SizedBox(height: 16,),
-                PasswordField(controller: _confirm,
-                label: 'Confirm new password',
-                validator: Validators.confirmPassword(()=> _new.text),
-                onSubmitted: (_) => _submit(),
-                ),
-                const SizedBox(height: 24,),
-                AuthSubmitButton(label: 'Update password', isLoading: _saving, onPressed: _submit,
-                )
-              ],
-            )),
-      )),
-    );
-    
-    
-}
 
+    return Scaffold(
+      appBar: AppBar(title: const Text('Change password')),
+      body: SafeArea(
+        child: user != null && !user.hasPassword
+            ? Padding(
+                padding: const .all(24),
+                child: Text(
+                  'Your account signs in with Google, so there is no password '
+                  'to change.',
+                  style: context.textTheme.bodyLarge,
+                ),
+              )
+            : SingleChildScrollView(
+                padding: const .all(16),
+                child: Form(
+                  key: _formKey,
+                  autovalidateMode: .onUserInteraction,
+                  child: Column(
+                    crossAxisAlignment: .stretch,
+                    children: [
+                      PasswordField(
+                        controller: _current,
+                        label: 'Current Password',
+                        textInputAction: .next,
+                        validator: (v) =>
+                            Validators.required(v, 'Current password'),
+                      ),
+                      const SizedBox(height: 16),
+                      PasswordField(
+                        controller: _new,
+                        label: 'New password',
+                        textInputAction: .next,
+                        validator: (value) {
+                          final error = Validators.password(value);
+                          if (error != null) return error;
+                          if (value == _current.text) {
+                            return 'Choose a different password';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 16),
+                      PasswordField(
+                        controller: _confirm,
+                        label: 'Confirm new password',
+                        validator: Validators.confirmPassword(() => _new.text),
+                        onSubmitted: (_) => _submit(),
+                      ),
+                      const SizedBox(height: 24),
+                      AuthSubmitButton(
+                        label: 'Update password',
+                        isLoading: _saving,
+                        onPressed: _submit,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+      ),
+    );
   }
-  
+}

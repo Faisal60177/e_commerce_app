@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class PasswordField  extends StatefulWidget{
+class PasswordField extends StatefulWidget {
   const PasswordField({
     required this.controller,
-    this.label = 'password',
+    this.label = 'Password',
     this.validator,
     this.textInputAction = TextInputAction.done,
     this.onSubmitted,
     this.autofillHints,
-    super.key
-});
+    super.key,
+  });
   final TextEditingController controller;
   final String label;
   final String? Function(String?)? validator;
@@ -19,8 +19,6 @@ class PasswordField  extends StatefulWidget{
 
   @override
   State<PasswordField> createState() => _PasswordFieldState();
-
-
 }
 
 class _PasswordFieldState extends State<PasswordField> {
@@ -34,12 +32,21 @@ class _PasswordFieldState extends State<PasswordField> {
       textInputAction: widget.textInputAction,
       onFieldSubmitted: widget.onSubmitted,
       autofillHints: widget.autofillHints,
+      autocorrect: false,
+      enableSuggestions: false,
       decoration: InputDecoration(
         labelText: widget.label,
         prefixIcon: const Icon(Icons.lock_outline_rounded),
-        suffixIcon: IconButton(onPressed: () => setState(() => _obscure = !_obscure), icon: Icon(_obscure ? Icons.visibility_outlined : Icons.visibility_off_outlined))
+        suffixIcon: IconButton(
+          tooltip: _obscure ? 'Show password' : 'Hide password',
+          onPressed: () => setState(() => _obscure = !_obscure),
+          icon: Icon(
+            _obscure
+                ? Icons.visibility_outlined
+                : Icons.visibility_off_outlined,
+          ),
+        ),
       ),
     );
   }
-
 }

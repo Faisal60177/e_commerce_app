@@ -8,7 +8,7 @@ enum PaymentMethod {
 
   static PaymentMethod fromName(String? name) {
     return values.firstWhere(
-        (method) => method.name == name,
+      (method) => method.name == name,
       orElse: () => cashOnDelivery,
     );
   }

@@ -13,7 +13,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:e_commerce_app/features/wishlist/presentation/widgets/wishlist_button.dart';
 
 class ProductGridSliver extends ConsumerWidget {
-
   const ProductGridSliver({
     required this.query,
     this.emptyTitle = 'No products found',
@@ -32,103 +31,111 @@ class ProductGridSliver extends ConsumerWidget {
     mainAxisExtent: ProductCard.height,
   );
 
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final state = ref.watch(productListProvider(query));
 
-@override
-Widget build(BuildContext context, WidgetRef ref) {
-  final state = ref.watch(productListProvider(query));
-  
-  return state.when(
-    loading: () => SliverPadding(padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-    sliver: SliverGrid.builder(gridDelegate: _delegate, itemCount: 6, itemBuilder: (context, index) => const ProductCardSkeleton(),
-    
-    ),
-    ),
-    error: (error, stackTrace) => SliverToBoxAdapter(
-      child: Padding(padding: const EdgeInsets.only(top: 48),
-      child: AppErrorView(message: failureMessage(error),
-      onRetry: () => ref.invalidate(productListProvider(query)),
-      ),
-      ),
-    ),
-    data : (data) {
-      if(data.items.isEmpty){
-        return SliverFillRemaining(
-          hasScrollBody: false,
-          child: AppEmptyView(icon: Icons.search_off_rounded, title: emptyTitle, subtitle: emptySubtitle,
-          ),
-        );
-      }
-      
-      return SliverMainAxisGroup(slivers: [
-        SliverPadding(padding: const EdgeInsets.symmetric(horizontal: 16),
+    return state.when(
+      loading: () => SliverPadding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
         sliver: SliverGrid.builder(
-            gridDelegate: _delegate,
-            itemCount: data.items.length, itemBuilder: (context, index) {
-              final product = data.items[index];
-              return ProductCard(
-                product: product, 
-                onTap: () => context.openProduct(product.id),
-                overlayAction: WishlistButton(product: product),
-              );
-        },
-
+          gridDelegate: _delegate,
+          itemCount: 6,
+          itemBuilder: (context, index) => const ProductCardSkeleton(),
         ),
-        ),
-
-        SliverToBoxAdapter(
-          child: _GridFooter(
-            state: data,
-            onRetry: () =>
-                ref.read(productListProvider(query).notifier).loadMore(),
+      ),
+      error: (error, stackTrace) => SliverToBoxAdapter(
+        child: Padding(
+          padding: const EdgeInsets.only(top: 48),
+          child: AppErrorView(
+            message: failureMessage(error),
+            onRetry: () => ref.invalidate(productListProvider(query)),
           ),
-        )
-      ],
-      );
-    }
-  );
-  
-}
+        ),
+      ),
+      data: (data) {
+        if (data.items.isEmpty) {
+          return SliverFillRemaining(
+            hasScrollBody: false,
+            child: AppEmptyView(
+              icon: Icons.search_off_rounded,
+              title: emptyTitle,
+              subtitle: emptySubtitle,
+            ),
+          );
+        }
 
+        return SliverMainAxisGroup(
+          slivers: [
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              sliver: SliverGrid.builder(
+                gridDelegate: _delegate,
+                itemCount: data.items.length,
+                itemBuilder: (context, index) {
+                  final product = data.items[index];
+                  return ProductCard(
+                    product: product,
+                    onTap: () => context.openProduct(product.id),
+                    overlayAction: WishlistButton(product: product),
+                  );
+                },
+              ),
+            ),
 
+            SliverToBoxAdapter(
+              child: _GridFooter(
+                state: data,
+                onRetry: () =>
+                    ref.read(productListProvider(query).notifier).loadMore(),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
 }
 
 class _GridFooter extends StatelessWidget {
-
   const _GridFooter({required this.state, required this.onRetry});
 
   final ProductListState state;
   final VoidCallback onRetry;
 
-@override
-Widget build(BuildContext context) {
-  if(state.isLoadingMore) {
-    return const Padding(padding: EdgeInsets.all(24),
-    child: Center(child: CircularProgressIndicator()),
-    );
-  }
-  
-  if(state.loadMoreError != null) {
-    return Padding(padding: const EdgeInsets.all(16),
-    child: Column(
-      children: [
-        Text(state.loadMoreError!.message),
-        TextButton(onPressed: onRetry, child: const Text('Retry')),
-      ],
-    ),
-    );
-  }
-  if(!state.hasMore) {
-    return Padding(padding: const EdgeInsets.all(24),
-    child: Center(
-      child: Text("You've reached the end", style: context.textTheme.bodySmall?.copyWith(color: context.colors.outline,
-      ),
-      ),
-    ),
-    );
-  }
-  return const SizedBox(height: 24,);
-  
-}
+  @override
+  Widget build(BuildContext context) {
+    if (state.isLoadingMore) {
+      return const Padding(
+        padding: EdgeInsets.all(24),
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
 
-
+    if (state.loadMoreError != null) {
+      return Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Text(state.loadMoreError!.message),
+            TextButton(onPressed: onRetry, child: const Text('Retry')),
+          ],
+        ),
+      );
+    }
+    if (!state.hasMore) {
+      return Padding(
+        padding: const EdgeInsets.all(24),
+        child: Center(
+          child: Text(
+            "You've reached the end",
+            style: context.textTheme.bodySmall?.copyWith(
+              color: context.colors.outline,
+            ),
+          ),
+        ),
+      );
+    }
+    return const SizedBox(height: 24);
+  }
 }

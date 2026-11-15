@@ -11,29 +11,30 @@ class NewOrder {
     required this.paymentMethod,
     required this.note,
     required this.totals,
-});
+  });
 
   factory NewOrder.create({
     required List<CartItem> items,
     required Address address,
     required PaymentMethod paymentMethod,
     String note = '',
-}) {
+  }) {
     return NewOrder._(
-        items: [
-          for(final item in items)
-            OrderItem(productId: item.productId,
-                title: item.title,
-                price: item.price,
-                discountPercentage: item.discountPercentage,
-                thumbnail: item.thumbnail,
-                quantity: item.quantity,
-            ),
-        ],
-        address: address,
-        paymentMethod: paymentMethod,
-        note: note.trim(),
-        totals: CartTotals.from(items),
+      items: [
+        for (final item in items)
+          OrderItem(
+            productId: item.productId,
+            title: item.title,
+            price: item.price,
+            discountPercentage: item.discountPercentage,
+            thumbnail: item.thumbnail,
+            quantity: item.quantity,
+          ),
+      ],
+      address: address,
+      paymentMethod: paymentMethod,
+      note: note.trim(),
+      totals: CartTotals.from(items),
     );
   }
 

@@ -10,7 +10,6 @@ import '../storage/app_preferences.dart';
 part 'core_providers.g.dart';
 
 @Riverpod(keepAlive: true)
-
 Dio dio(Ref ref) => createDio();
 
 @Riverpod(keepAlive: true)

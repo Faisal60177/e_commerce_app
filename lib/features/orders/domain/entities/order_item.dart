@@ -4,7 +4,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'order_item.freezed.dart';
 
 @freezed
-abstract class OrderItem  with _$OrderItem{
+abstract class OrderItem with _$OrderItem {
   const factory OrderItem({
     required int productId,
     required String title,

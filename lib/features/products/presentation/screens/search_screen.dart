@@ -85,14 +85,16 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           decoration: InputDecoration(
             hintText: 'Search products',
             isDense: true,
-            contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 12,
+            ),
             suffixIcon: _controller.text.isEmpty
                 ? null
                 : IconButton(
-              icon: const Icon(Icons.close_rounded),
-              onPressed: _clear,
-            ),
+                    icon: const Icon(Icons.close_rounded),
+                    onPressed: _clear,
+                  ),
           ),
         ),
         actions: const [SizedBox(width: 16)],
@@ -100,18 +102,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       body: _query.isEmpty
           ? _RecentSearches(onSelect: _useRecent)
           : NotificationListener<ScrollNotification>(
-        onNotification: _onScroll,
-        child: CustomScrollView(
-          slivers: [
-            const SliverToBoxAdapter(child: SizedBox(height: 8)),
-            ProductGridSliver(
-              query: ProductQuery(search: _query),
-              emptyTitle: 'No results for "$_query"',
-              emptySubtitle: 'Try a different keyword.',
+              onNotification: _onScroll,
+              child: CustomScrollView(
+                slivers: [
+                  const SliverToBoxAdapter(child: SizedBox(height: 8)),
+                  ProductGridSliver(
+                    query: ProductQuery(search: _query),
+                    emptyTitle: 'No results for "$_query"',
+                    emptySubtitle: 'Try a different keyword.',
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
-      ),
     );
   }
 }

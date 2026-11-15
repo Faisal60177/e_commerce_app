@@ -1,6 +1,8 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:e_commerce_app/core/error/failure.dart';
+
 import 'dart:developer' as dev;
 
 extension DioExceptionX on DioException {
@@ -9,15 +11,17 @@ extension DioExceptionX on DioException {
       DioExceptionType.connectionTimeout ||
       DioExceptionType.sendTimeout ||
       DioExceptionType.receiveTimeout ||
-      DioExceptionType.transformTimeout =>
-      const TimeoutFailure(),
+      DioExceptionType.transformTimeout => const TimeoutFailure(),
       DioExceptionType.connectionError => const NetworkFailure(),
       DioExceptionType.badResponse => _fromResponse(),
       DioExceptionType.cancel => const UnknownFailure('Request was cancelled.'),
-      DioExceptionType.badCertificate =>
-      const ServerFailure(message: 'Secure connection failed.'),
+      DioExceptionType.badCertificate => const ServerFailure(
+        message: 'Secure connection failed.',
+      ),
       DioExceptionType.unknown =>
-      error is SocketException ? const NetworkFailure() : const UnknownFailure(),
+        error is SocketException
+            ? const NetworkFailure()
+            : const UnknownFailure(),
     };
   }
 

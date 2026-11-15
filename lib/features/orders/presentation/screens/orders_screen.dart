@@ -25,7 +25,7 @@ class OrdersScreen extends ConsumerWidget {
           itemCount: 4,
           separatorBuilder: (context, index) => const SizedBox(height: 12),
           itemBuilder: (context, index) =>
-          const ShimmerBox(height: 140, radius: 16),
+              const ShimmerBox(height: 140, radius: 16),
         ),
         error: (error, stackTrace) => AppErrorView(
           message: failureMessage(error),
@@ -33,27 +33,28 @@ class OrdersScreen extends ConsumerWidget {
         ),
         data: (items) => items.isEmpty
             ? AppEmptyView(
-          icon: Icons.receipt_long_outlined,
-          title: 'No orders yet',
-          subtitle: 'Your orders will appear here after checkout.',
-          actionLabel: 'Start shopping',
-          onAction: () => context.goNamed(RouteNames.home),
-        )
+                icon: Icons.receipt_long_outlined,
+                title: 'No orders yet',
+                subtitle: 'Your orders will appear here after checkout.',
+                actionLabel: 'Start shopping',
+                onAction: () => context.goNamed(RouteNames.home),
+              )
             : ListView.separated(
-          padding: const EdgeInsets.all(16),
-          itemCount: items.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 12),
-          itemBuilder: (context, index) {
-            final order = items[index];
-            return OrderTile(
-              order: order,
-              onTap: () => context.pushNamed(
-                RouteNames.orderDetail,
-                pathParameters: {'id': order.id},
+                padding: const EdgeInsets.all(16),
+                itemCount: items.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final order = items[index];
+                  return OrderTile(
+                    order: order,
+                    onTap: () => context.pushNamed(
+                      RouteNames.orderDetail,
+                      pathParameters: {'id': order.id},
+                    ),
+                  );
+                },
               ),
-            );
-          },
-        ),
       ),
     );
   }

@@ -13,15 +13,15 @@ OrderRepository orderRepository(Ref ref) {
 }
 
 @Riverpod(keepAlive: true)
-Stream<List<Order>> orders(Ref ref){
+Stream<List<Order>> orders(Ref ref) {
   final uid = ref.watch(currentUidProvider);
-  if(uid == null) return Stream.value(const <Order>[]);
+  if (uid == null) return Stream.value(const <Order>[]);
   return ref.watch(orderRepositoryProvider).watchOrders(uid);
 }
 
 @Riverpod(keepAlive: true)
 Stream<Order?> order(Ref ref, String id) {
   final uid = ref.watch(currentUidProvider);
-  if(uid == null) return Stream.value(null);
+  if (uid == null) return Stream.value(null);
   return ref.watch(orderRepositoryProvider).watchOrder(uid, id);
 }

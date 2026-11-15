@@ -2,7 +2,7 @@ import 'dart:developer' as dev;
 
 import 'package:dio/dio.dart';
 
-class LoggingInterceptor  extends Interceptor {
+class LoggingInterceptor extends Interceptor {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     dev.log('→ ${options.method} ${options.uri}', name: 'HTTP');
@@ -11,19 +11,23 @@ class LoggingInterceptor  extends Interceptor {
 
   @override
   void onResponse(
-      Response<dynamic> response,
-      ResponseInterceptorHandler handler,
-      ) {
-    dev.log('← ${response.statusCode} ${response.requestOptions.uri}', name: 'HTTP');
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
+    dev.log(
+      '← ${response.statusCode} ${response.requestOptions.uri}',
+      name: 'HTTP',
+    );
     handler.next(response);
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    dev.log('✕ ${err.type.name} ${err.requestOptions.uri}', name: 'HTTP',
-    error:  err.message,
+    dev.log(
+      '✕ ${err.type.name} ${err.requestOptions.uri}',
+      name: 'HTTP',
+      error: err.message,
     );
     handler.next(err);
   }
-
-  }
+}

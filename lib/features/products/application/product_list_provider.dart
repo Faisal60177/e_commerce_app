@@ -8,9 +8,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'product_list_provider.g.dart';
 
-
 @riverpod
-class ProductList   extends _$ProductList {
+class ProductList extends _$ProductList {
   @override
   Future<ProductListState> build(ProductQuery query) async {
     final page = await _fetch(skip: 0);
@@ -22,13 +21,13 @@ class ProductList   extends _$ProductList {
     final search = query.search?.trim();
     final category = query.category;
 
-    if(search != null && search.isNotEmpty) {
+    if (search != null && search.isNotEmpty) {
       return repository.searchProducts(search, skip: skip, sort: query.sort);
-
     }
-    if(category != null){
+    if (category != null) {
       return repository.getProductsByCategory(
-        category, skip:skip,
+        category,
+        skip: skip,
         sort: query.sort,
       );
     }
@@ -37,24 +36,25 @@ class ProductList   extends _$ProductList {
 
   Future<void> loadMore() async {
     final current = state.value;
-    if(current == null ||current.isLoadingMore || !current.hasMore) return;
-    state = AsyncData(current.copyWith(isLoadingMore: true, loadMoreError: null));
+    if (current == null || current.isLoadingMore || !current.hasMore) return;
+    state = AsyncData(
+      current.copyWith(isLoadingMore: true, loadMoreError: null),
+    );
     try {
       final page = await _fetch(skip: current.items.length);
-      if(!ref.mounted) return;
-      state = AsyncData(current.copyWith(
-        items: [...current.items, ...page.items],
-        total: page.total,
-        isLoadingMore: false,
-      ));
+      if (!ref.mounted) return;
+      state = AsyncData(
+        current.copyWith(
+          items: [...current.items, ...page.items],
+          total: page.total,
+          isLoadingMore: false,
+        ),
+      );
     } on Failure catch (failure) {
-      if(!ref.mounted) return;
-      state = AsyncData(current.copyWith(isLoadingMore: false,loadMoreError: failure));
+      if (!ref.mounted) return;
+      state = AsyncData(
+        current.copyWith(isLoadingMore: false, loadMoreError: failure),
+      );
     }
-
-
-
   }
-
-
 }

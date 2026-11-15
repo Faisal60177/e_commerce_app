@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:e_commerce_app/core/constants/firestore_paths.dart';
 import 'package:e_commerce_app/core/error/failure.dart';
@@ -29,10 +30,10 @@ class FirestoreCartRepository implements CartRepository {
 
   @override
   Future<CartAddResult> addItem(
-      String uid,
-      Product product, {
-        int quantity = 1,
-      }) {
+    String uid,
+    Product product, {
+    int quantity = 1,
+  }) {
     final max = math.min(product.stock, CartConstants.maxQuantityPerItem);
     if (max < 1) {
       throw const DatabaseFailure('This item is out of stock.');
@@ -43,8 +44,7 @@ class FirestoreCartRepository implements CartRepository {
 
       return _db.runTransaction<CartAddResult>((transaction) async {
         final snapshot = await transaction.get(doc);
-        final existing =
-            (snapshot.data()?['quantity'] as num?)?.toInt() ?? 0;
+        final existing = (snapshot.data()?['quantity'] as num?)?.toInt() ?? 0;
         final requested = existing + quantity;
         final finalQuantity = math.min(math.max(requested, 1), max);
 
@@ -140,7 +140,8 @@ class FirestoreCartRepository implements CartRepository {
       quantity: quantity,
       discountPercentage: (data['discountPercentage'] as num?)?.toDouble() ?? 0,
       thumbnail: data['thumbnail'] as String? ?? '',
-      maxQuantity: (data['maxQuantity'] as num?)?.toInt() ??
+      maxQuantity:
+          (data['maxQuantity'] as num?)?.toInt() ??
           CartConstants.maxQuantityPerItem,
     );
   }

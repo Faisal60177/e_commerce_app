@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
+
 import 'dart:convert';
 import 'dart:developer' as dev;
+
 import 'package:e_commerce_app/core/constants/api_constants.dart';
 import 'package:e_commerce_app/core/error/failure.dart';
 import 'package:e_commerce_app/core/models/paginated.dart';
@@ -11,7 +13,7 @@ import 'package:e_commerce_app/features/products/domain/entities/product_sort.da
 import 'package:e_commerce_app/features/products/domain/entities/product_summary.dart';
 import 'package:e_commerce_app/features/products/domain/repositories/product_repository.dart';
 
-class ProductRepositoryImpl  implements ProductRepository{
+class ProductRepositoryImpl implements ProductRepository {
   ProductRepositoryImpl(this._dio);
 
   final Dio _dio;
@@ -21,40 +23,37 @@ class ProductRepositoryImpl  implements ProductRepository{
     int limit = ApiConstants.defaultPageSize,
     int skip = 0,
     ProductSort sort = ProductSort.relevance,
-
-}) {
+  }) {
     return _fetchPage(
       ApiConstants.product,
       limit: limit,
       skip: skip,
-      sort : sort
-
+      sort: sort,
     );
   }
 
   @override
   Future<Paginated<ProductSummary>> getProductsByCategory(
-      String slug, {
-        int limit = ApiConstants.defaultPageSize,
-        int skip = 0,
-        ProductSort sort = ProductSort.relevance
+    String slug, {
+    int limit = ApiConstants.defaultPageSize,
+    int skip = 0,
+    ProductSort sort = ProductSort.relevance,
   }) {
     return _fetchPage(
       ApiConstants.productByCategory(slug),
       limit: limit,
-      skip : skip,
-      sort : sort,
+      skip: skip,
+      sort: sort,
     );
-
   }
 
   @override
   Future<Paginated<ProductSummary>> searchProducts(
-      String query, {
-        int limit = ApiConstants.defaultPageSize,
-        int skip = 0,
-        ProductSort sort = ProductSort.relevance,
-      }) {
+    String query, {
+    int limit = ApiConstants.defaultPageSize,
+    int skip = 0,
+    ProductSort sort = ProductSort.relevance,
+  }) {
     return _fetchPage(
       ApiConstants.productSearch,
       limit: limit,
@@ -67,7 +66,7 @@ class ProductRepositoryImpl  implements ProductRepository{
   @override
   Future<Product> getProductById(int id) {
     return guardApi(() async {
-      final json = await _get<Map<String,dynamic>>(
+      final json = await _get<Map<String, dynamic>>(
         ApiConstants.productById(id),
       );
       return Product.fromJson(json);
@@ -78,18 +77,19 @@ class ProductRepositoryImpl  implements ProductRepository{
   Future<List<ProductCategory>> getCategories() {
     return guardApi(() async {
       final json = await _get<List<dynamic>>(ApiConstants.categories);
-      return json.map((e) => ProductCategory.fromJson(e as Map<String, dynamic>)).toList();
-
+      return json
+          .map((e) => ProductCategory.fromJson(e as Map<String, dynamic>))
+          .toList();
     });
   }
 
   Future<Paginated<ProductSummary>> _fetchPage(
-      String path, {
-        required int limit,
-        required int skip,
-        required ProductSort sort,
-        Map<String, dynamic> extraQuery = const {},
-      }) {
+    String path, {
+    required int limit,
+    required int skip,
+    required ProductSort sort,
+    Map<String, dynamic> extraQuery = const {},
+  }) {
     return guardApi(() async {
       final json = await _get<Map<String, dynamic>>(
         path,
@@ -136,11 +136,10 @@ class ProductRepositoryImpl  implements ProductRepository{
     final preview = '$data';
     dev.log(
       'Expected $T from $path but got ${data.runtimeType} '
-          '(content-type: ${response.headers.value(Headers.contentTypeHeader)}): '
-          '${preview.length > 200 ? preview.substring(0, 200) : preview}',
+      '(content-type: ${response.headers.value(Headers.contentTypeHeader)}): '
+      '${preview.length > 200 ? preview.substring(0, 200) : preview}',
       name: 'API',
     );
     throw const UnknownFailure('Unexpected response from the server.');
   }
-
 }

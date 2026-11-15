@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AppPreferences {
-
   AppPreferences(this._prefs);
 
   final SharedPreferences _prefs;
@@ -23,11 +22,11 @@ class AppPreferences {
     await _prefs.setString(_themekey, mode.name);
   }
 
-  List<String> get recentSearches  =>
+  List<String> get recentSearches =>
       _prefs.getStringList(_recentSearchKey) ?? const [];
   Future<void> addRecentSearch(String query) async {
     final value = query.trim();
-    if(value.isEmpty) return;
+    if (value.isEmpty) return;
 
     final updated = [
       value,
@@ -45,6 +44,4 @@ class AppPreferences {
   Future<void> clearRecentSearches() async {
     await _prefs.remove(_recentSearchKey);
   }
-
-
-  }
+}

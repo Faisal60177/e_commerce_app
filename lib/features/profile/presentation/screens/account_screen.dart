@@ -53,58 +53,58 @@ class AccountScreen extends ConsumerWidget {
       ),
       body: user == null
           ? const SignInPrompt(
-        icon: Icons.person_outline_rounded,
-        title: 'Welcome to ShopEase',
-        subtitle: 'Sign in to see your orders, addresses and settings.',
-      )
+              icon: Icons.person_outline_rounded,
+              title: 'Welcome to ShopEase',
+              subtitle: 'Sign in to see your orders, addresses and settings.',
+            )
           : ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          _ProfileHeader(user: user),
-          const SizedBox(height: 24),
-          Card(
-            child: Column(
+              padding: const EdgeInsets.all(16),
               children: [
-                _MenuTile(
-                  icon: Icons.receipt_long_outlined,
-                  label: 'My orders',
-                  onTap: () => context.pushNamed(RouteNames.orders),
+                _ProfileHeader(user: user),
+                const SizedBox(height: 24),
+                Card(
+                  child: Column(
+                    children: [
+                      _MenuTile(
+                        icon: Icons.receipt_long_outlined,
+                        label: 'My orders',
+                        onTap: () => context.pushNamed(RouteNames.orders),
+                      ),
+                      const Divider(height: 1),
+                      _MenuTile(
+                        icon: Icons.favorite_border_rounded,
+                        label: 'Wishlist',
+                        onTap: () => context.goNamed(RouteNames.wishlist),
+                      ),
+                      const Divider(height: 1),
+                      _MenuTile(
+                        icon: Icons.location_on_outlined,
+                        label: 'Addresses',
+                        onTap: () => context.pushNamed(RouteNames.addresses),
+                      ),
+                      const Divider(height: 1),
+                      _MenuTile(
+                        icon: Icons.person_outline_rounded,
+                        label: 'Edit profile',
+                        onTap: () => context.pushNamed(RouteNames.editProfile),
+                      ),
+                      const Divider(height: 1),
+                      _MenuTile(
+                        icon: Icons.settings_outlined,
+                        label: 'Settings',
+                        onTap: () => context.pushNamed(RouteNames.settings),
+                      ),
+                    ],
+                  ),
                 ),
-                const Divider(height: 1),
-                _MenuTile(
-                  icon: Icons.favorite_border_rounded,
-                  label: 'Wishlist',
-                  onTap: () => context.goNamed(RouteNames.wishlist),
-                ),
-                const Divider(height: 1),
-                _MenuTile(
-                  icon: Icons.location_on_outlined,
-                  label: 'Addresses',
-                  onTap: () => context.pushNamed(RouteNames.addresses),
-                ),
-                const Divider(height: 1),
-                _MenuTile(
-                  icon: Icons.person_outline_rounded,
-                  label: 'Edit profile',
-                  onTap: () => context.pushNamed(RouteNames.editProfile),
-                ),
-                const Divider(height: 1),
-                _MenuTile(
-                  icon: Icons.settings_outlined,
-                  label: 'Settings',
-                  onTap: () => context.pushNamed(RouteNames.settings),
+                const SizedBox(height: 24),
+                OutlinedButton.icon(
+                  onPressed: () => _confirmSignOut(context, ref),
+                  icon: const Icon(Icons.logout_rounded),
+                  label: const Text('Sign out'),
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 24),
-          OutlinedButton.icon(
-            onPressed: () => _confirmSignOut(context, ref),
-            icon: const Icon(Icons.logout_rounded),
-            label: const Text('Sign out'),
-          ),
-        ],
-      ),
     );
   }
 }

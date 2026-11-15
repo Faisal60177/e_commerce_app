@@ -17,10 +17,12 @@ class CartActions {
   CartActions(this._ref);
   final Ref _ref;
   CartRepository get _repository => _ref.read(cartRepositoryProvider);
-  
+
   String get _uid {
     final uid = _ref.read(currentUidProvider);
-    if(uid == null) throw const AuthFailure('Please sign in to use your cart.');
+    if (uid == null) {
+      throw const AuthFailure('Please sign in to use your cart.');
+    }
     return uid;
   }
 
@@ -29,8 +31,7 @@ class CartActions {
   Future<void> setQuantity(CartItem item, int quantity) => _repository
       .setQuantity(_uid, item.productId, math.min(quantity, item.maxQuantity));
 
-  Future<void> remove(int productId) =>
-      _repository.removeItem(_uid, productId);
+  Future<void> remove(int productId) => _repository.removeItem(_uid, productId);
   Future<void> restore(CartItem item) => _repository.restoreItem(_uid, item);
   Future<void> clear() => _repository.clear(_uid);
 }

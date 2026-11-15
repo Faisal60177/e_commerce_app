@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 abstract final class AppTextStyles {
-
-  static TextTheme textTheme(TextTheme base){
+  static TextTheme textTheme(TextTheme base) {
     return base.copyWith(
       headlineMedium: base.headlineMedium?.copyWith(
         fontWeight: FontWeight.w800,
@@ -16,5 +15,8 @@ abstract final class AppTextStyles {
     );
   }
 
-  static const price = TextStyle(fontWeight: FontWeight.w800, letterSpacing: -0.2);
+  static const price = TextStyle(
+    fontWeight: FontWeight.w800,
+    letterSpacing: -0.2,
+  );
 }

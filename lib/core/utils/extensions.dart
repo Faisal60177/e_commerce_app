@@ -7,13 +7,12 @@ extension BuildContextX on BuildContext {
 
   void showSnack(String message, {bool isError = false}) {
     ScaffoldMessenger.of(this)
-        ..hideCurrentSnackBar()
-        ..showSnackBar(
-          SnackBar(content: Text(message),
-          backgroundColor:  isError ? colors.error: null,
-          )
-        );
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          backgroundColor: isError ? colors.error : null,
+        ),
+      );
   }
-
-
 }

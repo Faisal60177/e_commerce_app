@@ -11,10 +11,9 @@ abstract class ProductListState with _$ProductListState {
     required int total,
     @Default(false) bool isLoadingMore,
     Failure? loadMoreError,
-}) = _ProductListState;
+  }) = _ProductListState;
 
   const ProductListState._();
 
   bool get hasMore => items.length < total;
-
 }

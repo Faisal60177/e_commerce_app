@@ -93,9 +93,9 @@ class _AddToCartBarState extends ConsumerState<AddToCartBar> {
                   onPressed: inStock && !_busy ? _add : null,
                   icon: _busy
                       ? const SizedBox.square(
-                    dimension: 18,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
+                          dimension: 18,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
                       : const Icon(Icons.shopping_cart_outlined),
                   label: Text(
                     inStock

@@ -4,7 +4,7 @@ import 'package:e_commerce_app/features/settings/application/theme_mode_controll
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class App  extends ConsumerWidget{
+class App extends ConsumerWidget {
   const App({super.key});
 
   @override

@@ -271,9 +271,9 @@ class _AddressFormState extends ConsumerState<_AddressForm> {
                   onPressed: _saving ? null : _save,
                   child: _saving
                       ? const SizedBox.square(
-                    dimension: 22,
-                    child: CircularProgressIndicator(strokeWidth: 2.5),
-                  )
+                          dimension: 22,
+                          child: CircularProgressIndicator(strokeWidth: 2.5),
+                        )
                       : Text(isEditing ? 'Save changes' : 'Save address'),
                 ),
               ],

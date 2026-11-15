@@ -13,23 +13,31 @@ class ProductInfoSection extends StatelessWidget {
 
     final rows = <(IconData, String, String)>[
       if (product.shippingInformation != null)
-        (Icons.local_shipping_outlined, 'Shipping', product.shippingInformation!),
+        (
+          Icons.local_shipping_outlined,
+          'Shipping',
+          product.shippingInformation!,
+        ),
       if (product.warrantyInformation != null)
-        (Icons.verified_user_outlined, 'Warranty', product.warrantyInformation!),
+        (
+          Icons.verified_user_outlined,
+          'Warranty',
+          product.warrantyInformation!,
+        ),
       if (product.returnPolicy != null)
         (Icons.assignment_return_outlined, 'Returns', product.returnPolicy!),
       if (product.minimumOrderQuantity != null)
         (
-        Icons.inventory_2_outlined,
-        'Minimum order',
-        '${product.minimumOrderQuantity} pcs',
+          Icons.inventory_2_outlined,
+          'Minimum order',
+          '${product.minimumOrderQuantity} pcs',
         ),
       if (product.sku != null) (Icons.qr_code_2_rounded, 'SKU', product.sku!),
       if (dimensions != null)
         (
-        Icons.straighten_rounded,
-        'Dimensions',
-        '${dimensions.width} × ${dimensions.height} × ${dimensions.depth}',
+          Icons.straighten_rounded,
+          'Dimensions',
+          '${dimensions.width} × ${dimensions.height} × ${dimensions.depth}',
         ),
     ];
 

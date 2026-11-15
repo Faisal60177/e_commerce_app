@@ -5,7 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 part 'cart_item.freezed.dart';
 
 @freezed
-abstract class CartItem  with _$CartItem{
+abstract class CartItem with _$CartItem {
   const factory CartItem({
     required int productId,
     required String title,
@@ -14,8 +14,7 @@ abstract class CartItem  with _$CartItem{
     @Default(0.0) double discountPercentage,
     @Default('') String thumbnail,
     @Default(CartConstants.maxQuantityPerItem) int maxQuantity,
-
-}) = _CartItem;
+  }) = _CartItem;
 
   const CartItem._();
 

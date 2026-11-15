@@ -5,29 +5,31 @@ import 'package:flutter/material.dart';
 abstract final class AppTheme {
   static ThemeData get light => _build(Brightness.light);
   static ThemeData get dark => _build(Brightness.dark);
-  
+
   static ThemeData _build(Brightness brightness) {
-    final scheme = ColorScheme.fromSeed(seedColor: AppColors.seed,
-    brightness: brightness,
+    final scheme = ColorScheme.fromSeed(
+      seedColor: AppColors.seed,
+      brightness: brightness,
     );
-    
+
     final base = ThemeData(useMaterial3: true, colorScheme: scheme);
     final radius = BorderRadius.circular(14);
-    
-    OutlineInputBorder border([Color? color, double width = 0]){
+
+    OutlineInputBorder border([Color? color, double width = 0]) {
       return OutlineInputBorder(
         borderRadius: radius,
         borderSide: color == null
-          ? BorderSide.none : BorderSide(color: color, width: width),
+            ? BorderSide.none
+            : BorderSide(color: color, width: width),
       );
     }
-    
+
     return base.copyWith(
       textTheme: AppTextStyles.textTheme(base.textTheme),
       scaffoldBackgroundColor: scheme.surface,
       appBarTheme: AppBarTheme(
         centerTitle: false,
-        elevation:  0,
+        elevation: 0,
         scrolledUnderElevation: 0,
         backgroundColor: scheme.surface,
         foregroundColor: scheme.onSurface,
@@ -39,12 +41,13 @@ abstract final class AppTheme {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ),
 
-
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: scheme.surfaceContainerHighest.withValues(alpha: 0.5),
-        contentPadding:
-        const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 16,
+        ),
         border: border(),
         enabledBorder: border(),
         focusedBorder: border(scheme.primary, 1.5),
@@ -59,12 +62,12 @@ abstract final class AppTheme {
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
-        style: OutlinedButton.styleFrom (
+        style: OutlinedButton.styleFrom(
           minimumSize: const Size(64, 52),
           shape: RoundedRectangleBorder(borderRadius: radius),
         ),
       ),
-      chipTheme:  const ChipThemeData(
+      chipTheme: const ChipThemeData(
         shape: StadiumBorder(),
         side: BorderSide.none,
       ),
@@ -73,7 +76,8 @@ abstract final class AppTheme {
         height: 68,
         backgroundColor: scheme.surface,
         indicatorColor: scheme.primaryContainer,
-        labelTextStyle: const WidgetStatePropertyAll(TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+        labelTextStyle: const WidgetStatePropertyAll(
+          TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         ),
       ),
       snackBarTheme: SnackBarThemeData(

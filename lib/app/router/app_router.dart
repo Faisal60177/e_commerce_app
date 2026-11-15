@@ -26,6 +26,8 @@ import 'package:e_commerce_app/features/orders/presentation/screens/orders_scree
 import 'package:e_commerce_app/features/profile/presentation/screens/change_password_screen.dart';
 import 'package:e_commerce_app/features/profile/presentation/screens/edit_profile_screen.dart';
 import 'package:e_commerce_app/features/settings/presentation/screens/settings_screen.dart';
+import 'package:e_commerce_app/app/router/safe_redirect.dart';
+import 'package:e_commerce_app/features/auth/presentation/screens/splash_screen.dart';
 
 part 'app_router.g.dart';
 
@@ -41,36 +43,50 @@ class _AuthRefresh extends ChangeNotifier {
   void notify() => notifyListeners();
 }
 
-String? _redirect(Ref ref, GoRouterState state) {
-  final auth = ref.read(authUserProvider);
-  if (!auth.hasValue) return null;
-  final user = auth.value;
-  final location = state.matchedLocation;
+bool _isProtected(String location) => _protectedPrefixes.any(
+      (p) => location == p || location.startsWith('$p/'),
+);
 
-  if (user == null) {
-    if (location == RoutePaths.verifyEmail) return RoutePaths.login;
-    final needsAuth = _protectedPrefixes.any(location.startsWith);
-    if (needsAuth) {
+String? _redirect(Ref ref, GoRouterState state) {
+  final status = ref.read(authStatusProvider);
+  final location = state.matchedLocation;
+  final onSplash = location == RoutePaths.splash;
+  final onVerify = location == RoutePaths.verifyEmail;
+  final from = safeRedirectPath(state.uri.queryParameters['from']);
+
+  switch (status) {
+    case AuthStatus.unknown:
+      if (onSplash) return null;
       return Uri(
-        path: RoutePaths.login,
+        path: RoutePaths.splash,
         queryParameters: {'from': state.uri.toString()},
       ).toString();
-    }
-    return null;
-  }
 
-  if (!user.emailVerified) {
-    return location == RoutePaths.verifyEmail ? null : RoutePaths.verifyEmail;
-  }
+    case AuthStatus.signedOut:
+      if (onSplash) return from ?? RoutePaths.home;
+      if (onVerify) return RoutePaths.login;
+      if (_isProtected(location)) {
+        return Uri(
+          path: RoutePaths.login,
+          queryParameters: {'from': state.uri.toString()},
+        ).toString();
+      }
+      return null;
 
-  if (location == RoutePaths.verifyEmail) return RoutePaths.home;
-  return null;
+    case AuthStatus.needsVerification:
+      return onVerify ? null : RoutePaths.verifyEmail;
+
+    case AuthStatus.signedIn:
+      if (onSplash) return from ?? RoutePaths.home;
+      if (onVerify) return RoutePaths.home;
+      return null;
+  }
 }
 
 @Riverpod(keepAlive: true)
 GoRouter appRouter(Ref ref) {
   final refresh = _AuthRefresh();
-  ref.listen(authUserProvider, (previous, next) => refresh.notify());
+  ref.listen(authStatusProvider, (previous, next) => refresh.notify());
 
   final router = GoRouter(
     initialLocation: RoutePaths.home,
@@ -104,8 +120,7 @@ GoRouter appRouter(Ref ref) {
               GoRoute(
                 path: RoutePaths.cart,
                 name: RouteNames.cart,
-                builder: (context, state) =>
-                const CartScreen(),
+                builder: (context, state) => const CartScreen(),
               ),
             ],
           ),
@@ -158,7 +173,7 @@ GoRouter appRouter(Ref ref) {
         builder: (context, state) {
           final sortName = state.pathParameters['sort'] ?? '';
           final sort = ProductSort.values.firstWhere(
-                (s) => s.name == sortName,
+            (s) => s.name == sortName,
             orElse: () => ProductSort.relevance,
           );
           return ProductListScreen(
@@ -243,6 +258,13 @@ GoRouter appRouter(Ref ref) {
         name: RouteNames.settings,
         builder: (context, state) => const SettingsScreen(),
       ),
+
+      GoRoute(
+        path: RoutePaths.splash,
+        name: RouteNames.splash,
+        builder: (context, state) => const SplashScreen(),
+      ),
+
     ],
   );
 

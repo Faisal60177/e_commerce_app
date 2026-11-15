@@ -30,7 +30,7 @@ class CartSummary extends StatelessWidget {
               if (totals.amountToFreeShipping > 0) ...[
                 Text(
                   'Add ${Formatters.price(totals.amountToFreeShipping)} more '
-                      'for free shipping',
+                  'for free shipping',
                   style: context.textTheme.bodySmall,
                 ),
                 const SizedBox(height: 6),
@@ -54,7 +54,7 @@ class CartSummary extends StatelessWidget {
                 onPressed: onCheckout,
                 child: Text(
                   'Checkout · ${totals.itemCount} '
-                      '${totals.itemCount == 1 ? 'item' : 'items'}',
+                  '${totals.itemCount == 1 ? 'item' : 'items'}',
                 ),
               ),
             ],

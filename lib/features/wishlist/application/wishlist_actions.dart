@@ -11,11 +11,11 @@ WishlistActions wishlistActions(Ref ref) => WishlistActions(ref);
 
 class WishlistActions {
   WishlistActions(this._ref);
-  
+
   final Ref _ref;
   String get _uid {
     final uid = _ref.read(currentUidProvider);
-    if(uid == null) {
+    if (uid == null) {
       throw const AuthFailure('Please sign in to use your wishlist.');
     }
     return uid;
@@ -25,13 +25,14 @@ class WishlistActions {
     final repository = _ref.read(wishlistRepositoryProvider);
     final saved = _ref.read(wishlistIdsProvider).contains(product.id);
 
-    if(saved) {
+    if (saved) {
       await repository.remove(_uid, product.id);
       return false;
     }
     await repository.add(_uid, product);
     return true;
   }
+
   Future<void> remove(int productId) =>
       _ref.read(wishlistRepositoryProvider).remove(_uid, productId);
 }

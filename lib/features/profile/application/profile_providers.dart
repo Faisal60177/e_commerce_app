@@ -15,6 +15,6 @@ ProfileRepository profileRepository(Ref ref) {
 @Riverpod(keepAlive: true)
 Stream<UserProfile> userProfile(Ref ref) {
   final uid = ref.watch(currentUidProvider);
-  if(uid == null) return Stream.value(const UserProfile());
+  if (uid == null) return Stream.value(const UserProfile());
   return ref.watch(profileRepositoryProvider).watchProfile(uid);
 }

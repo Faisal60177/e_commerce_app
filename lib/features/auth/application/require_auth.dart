@@ -6,7 +6,7 @@ import 'package:go_router/go_router.dart';
 
 extension RequireAuth on WidgetRef {
   Future<bool> ensureSignedIn(BuildContext context) async {
-    if(read(currentUidProvider) != null) return true;
+    if (read(currentUidProvider) != null) return true;
     final signedIn = await context.pushNamed<bool>(RouteNames.login);
     return signedIn ?? false;
   }

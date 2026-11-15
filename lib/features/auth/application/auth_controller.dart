@@ -5,7 +5,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'auth_controller.g.dart';
 
-
 @riverpod
 class AuthController extends _$AuthController {
   @override
@@ -20,12 +19,15 @@ class AuthController extends _$AuthController {
     required String name,
     required String email,
     required String password,
-  }) =>
-      _run(() => _repo.signUp(name: name, email: email, password: password));
+  }) => _run(() => _repo.signUp(name: name, email: email, password: password));
 
-  Future<bool> signInWithGoogle() => _run(() async {
-    await _repo.signInWithGoogle();
-  });
+  Future<bool> signInWithGoogle() async {
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(_repo.signInWithGoogle);
+    if (!ref.mounted) return false;
+    state = result;
+    return result.value ?? false;
+  }
 
   Future<bool> sendVerificationEmail() => _run(_repo.sendVerificationEmail);
 
@@ -42,12 +44,9 @@ class AuthController extends _$AuthController {
       final user = await _repo.reloadUser();
       if (!ref.mounted) return false;
       if (!silent) state = const AsyncData(null);
-      ref.invalidate(authUserProvider);
       return user?.emailVerified ?? false;
-    } on Failure catch (failure) {
-      if (ref.mounted && !silent) {
-        state = AsyncError(failure, StackTrace.current);
-      }
+    } on Failure catch (failure, st) {
+      if (ref.mounted && !silent) state = AsyncError(failure, st);
       return false;
     }
   }

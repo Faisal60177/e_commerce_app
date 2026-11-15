@@ -15,8 +15,9 @@ class FirestoreAddressRepository implements AddressRepository {
   @override
   Stream<List<Address>> watchAddresses(String uid) async* {
     try {
-      await for (final snapshot
-      in _items(uid).orderBy('createdAt').snapshots()) {
+      await for (final snapshot in _items(
+        uid,
+      ).orderBy('createdAt').snapshots()) {
         final addresses = snapshot.docs.map(_fromDoc).toList();
         yield [
           ...addresses.where((a) => a.isDefault),
@@ -40,24 +41,20 @@ class FirestoreAddressRepository implements AddressRepository {
       final doc = isNew ? collection.doc() : collection.doc(address.id);
 
       final batch = _db.batch()
-        ..set(
-          doc,
-          {
-            'label': address.label.name,
-            'fullName': address.fullName.trim(),
-            'phone': address.phone.trim(),
-            'line1': address.line1.trim(),
-            'line2': address.line2.trim(),
-            'city': address.city.trim(),
-            'region': address.region.trim(),
-            'postalCode': address.postalCode.trim(),
-            'country': address.country.trim(),
-            'isDefault': makeDefault,
-            'updatedAt': FieldValue.serverTimestamp(),
-            if (isNew) 'createdAt': FieldValue.serverTimestamp(),
-          },
-          SetOptions(merge: true),
-        );
+        ..set(doc, {
+          'label': address.label.name,
+          'fullName': address.fullName.trim(),
+          'phone': address.phone.trim(),
+          'line1': address.line1.trim(),
+          'line2': address.line2.trim(),
+          'city': address.city.trim(),
+          'region': address.region.trim(),
+          'postalCode': address.postalCode.trim(),
+          'country': address.country.trim(),
+          'isDefault': makeDefault,
+          'updatedAt': FieldValue.serverTimestamp(),
+          if (isNew) 'createdAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
 
       if (makeDefault) {
         for (final other in others) {

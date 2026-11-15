@@ -10,28 +10,23 @@ abstract interface class ProductRepository {
     int limit = ApiConstants.defaultPageSize,
     int skip = 0,
     ProductSort sort = ProductSort.relevance,
-});
+  });
 
   Future<Paginated<ProductSummary>> getProductsByCategory(
-      String slug, {
-        int limit = ApiConstants.defaultPageSize,
-        int skip = 0,
-        ProductSort sort = ProductSort.relevance,
-
+    String slug, {
+    int limit = ApiConstants.defaultPageSize,
+    int skip = 0,
+    ProductSort sort = ProductSort.relevance,
   });
 
   Future<Paginated<ProductSummary>> searchProducts(
-      String query, {
-        int limit = ApiConstants.defaultPageSize,
-        int skip = 0,
-        ProductSort sort = ProductSort.relevance,
-      });
+    String query, {
+    int limit = ApiConstants.defaultPageSize,
+    int skip = 0,
+    ProductSort sort = ProductSort.relevance,
+  });
 
   Future<Product> getProductById(int id);
 
   Future<List<ProductCategory>> getCategories();
-
-
-
-
 }

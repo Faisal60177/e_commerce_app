@@ -3,7 +3,7 @@ import 'package:e_commerce_app/core/utils/extensions.dart';
 import 'package:e_commerce_app/core/utils/formatters.dart';
 import 'package:flutter/material.dart';
 
-class PriceBreakdown extends StatelessWidget{
+class PriceBreakdown extends StatelessWidget {
   const PriceBreakdown({
     required this.subtotal,
     required this.discount,
@@ -23,21 +23,24 @@ class PriceBreakdown extends StatelessWidget{
       mainAxisSize: .min,
       children: [
         _Row(label: 'Subtotal', value: Formatters.price(subtotal)),
-        if(discount > 0)
-          _Row(label: 'Discount',
+        if (discount > 0)
+          _Row(
+            label: 'Discount',
             value: '-${Formatters.price(discount)}',
             valueColor: AppColors.success,
           ),
-        _Row(label: 'Shipping', value: shipping == 0 ? 'Free' : Formatters.price(shipping),
+        _Row(
+          label: 'Shipping',
+          value: shipping == 0 ? 'Free' : Formatters.price(shipping),
         ),
-        const Divider(height: 20,),
-        _Row(label: 'Total', value: Formatters.price(total), bold: true,),
+        const Divider(height: 20),
+        _Row(label: 'Total', value: Formatters.price(total), bold: true),
       ],
     );
   }
 }
 
-class _Row extends StatelessWidget{
+class _Row extends StatelessWidget {
   const _Row({
     required this.label,
     required this.value,
@@ -56,13 +59,14 @@ class _Row extends StatelessWidget{
         ? context.textTheme.titleMedium?.copyWith(fontWeight: .w800)
         : context.textTheme.bodyMedium;
 
-    return Padding(padding: const .symmetric(vertical: 3),
-    child:  Row(
-      children: [
-        Expanded(child: Text(label, style: style,)),
-        Text(value, style: style?.copyWith(color: valueColor),),
-      ],
-    ),);
-
+    return Padding(
+      padding: const .symmetric(vertical: 3),
+      child: Row(
+        children: [
+          Expanded(child: Text(label, style: style)),
+          Text(value, style: style?.copyWith(color: valueColor)),
+        ],
+      ),
+    );
   }
 }

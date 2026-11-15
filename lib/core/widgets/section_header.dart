@@ -9,16 +9,15 @@ class SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(padding: const EdgeInsets.fromLTRB(16, 24, 8, 8),
-    child: Row(
-      children: [
-        Expanded(child: Text(title, style: context.textTheme.titleLarge,)),
-        if(onSeeAll != null)
-          TextButton(onPressed: onSeeAll, child: const Text('See all')),
-      ],
-    ),
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 24, 8, 8),
+      child: Row(
+        children: [
+          Expanded(child: Text(title, style: context.textTheme.titleLarge)),
+          if (onSeeAll != null)
+            TextButton(onPressed: onSeeAll, child: const Text('See all')),
+        ],
+      ),
     );
-
-
   }
 }

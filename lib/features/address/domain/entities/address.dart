@@ -34,13 +34,18 @@ abstract class Address with _$Address {
 
   const Address._();
 
-  String get cityLine => [city, region, postalCode]
-      .where((part) => part.trim().isNotEmpty)
-      .join(', ');
+  String get cityLine => [
+    city,
+    region,
+    postalCode,
+  ].where((part) => part.trim().isNotEmpty).join(', ');
 
-  String get formatted => [line1, line2, cityLine, country]
-      .where((part) => part.trim().isNotEmpty)
-      .join('\n');
+  String get formatted => [
+    line1,
+    line2,
+    cityLine,
+    country,
+  ].where((part) => part.trim().isNotEmpty).join('\n');
 
   String get singleLine => formatted.replaceAll('\n', ', ');
 }

@@ -33,15 +33,17 @@ abstract class Product with _$Product {
     ProductMeta? meta,
     @Default([]) List<String> images,
     @Default('') String thumbnail,
-}) = _Product;
+  }) = _Product;
 
   const Product._();
 
-  factory Product.fromJson(Map<String, dynamic> json) => _$ProductFromJson(json);
+  factory Product.fromJson(Map<String, dynamic> json) =>
+      _$ProductFromJson(json);
 
   bool get hasDiscount => discountPercentage > 0;
 
-  double get discountedPrice => PriceUtils.applyDiscount(price, discountPercentage);
+  double get discountedPrice =>
+      PriceUtils.applyDiscount(price, discountPercentage);
 
   bool get isInStock => stock > 0;
 
@@ -50,12 +52,11 @@ abstract class Product with _$Product {
   String get coverImage => images.isNotEmpty ? images.first : thumbnail;
 
   ProductSummary toSummary() => ProductSummary(
-      id: id,
-      title: title,
-      price: price,
-      thumbnail: thumbnail,
-      rating: rating,
-      discountPercentage: discountPercentage,);
-
-
+    id: id,
+    title: title,
+    price: price,
+    thumbnail: thumbnail,
+    rating: rating,
+    discountPercentage: discountPercentage,
+  );
 }

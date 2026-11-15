@@ -21,10 +21,10 @@ class _FakeAdapter implements HttpClientAdapter {
 
   @override
   Future<ResponseBody> fetch(
-      RequestOptions options,
-      Stream<Uint8List>? requestStream,
-      Future<void>? cancelFuture,
-      ) async {
+    RequestOptions options,
+    Stream<Uint8List>? requestStream,
+    Future<void>? cancelFuture,
+  ) async {
     final reply = responder(options);
     return ResponseBody.fromString(
       jsonEncode(reply.body),
@@ -51,8 +51,7 @@ const _summaryPage = <String, Object>{
       'id': 1,
       'title': 'Essence Mascara Lash Princess',
       'price': 9.99,
-      'thumbnail':
-      'https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp',
+      'thumbnail': 'https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp',
       'rating': 2.56,
       'discountPercentage': 10.48,
     },
@@ -60,8 +59,7 @@ const _summaryPage = <String, Object>{
       'id': 2,
       'title': 'Eyeshadow Palette with Mirror',
       'price': 19.99,
-      'thumbnail':
-      'https://cdn.dummyjson.com/product-images/beauty/eyeshadow-palette-with-mirror/thumbnail.webp',
+      'thumbnail': 'https://cdn.dummyjson.com/product-images/beauty/eyeshadow-palette-with-mirror/thumbnail.webp',
       'rating': 2.86,
       'discountPercentage': 18.19,
     },
@@ -107,7 +105,7 @@ const _groceryProduct = <String, Object>{
   },
   'images': ['https://cdn.dummyjson.com/product-images/groceries/apple/1.webp'],
   'thumbnail':
-  'https://cdn.dummyjson.com/product-images/groceries/apple/thumbnail.webp',
+      'https://cdn.dummyjson.com/product-images/groceries/apple/thumbnail.webp',
 };
 
 void main() {
@@ -150,7 +148,7 @@ void main() {
 
     test('getCategories parses slug and name', () async {
       final repo = _repo(
-            (_) => const _Reply([
+        (_) => const _Reply([
           {
             'slug': 'beauty',
             'name': 'Beauty',
@@ -172,10 +170,9 @@ void main() {
 
     test('maps a 404 response to NotFoundFailure', () async {
       final repo = _repo(
-            (_) => const _Reply(
-          {'message': "Product with id '999' not found"},
-          status: 404,
-        ),
+        (_) => const _Reply({
+          'message': "Product with id '999' not found",
+        }, status: 404),
       );
 
       expect(repo.getProductById(999), throwsA(isA<NotFoundFailure>()));

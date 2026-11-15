@@ -1,5 +1,3 @@
-import 'package:e_commerce_app/core/error/failure.dart';
-import 'package:e_commerce_app/core/utils/extensions.dart';
 import 'package:e_commerce_app/core/utils/validators.dart';
 import 'package:e_commerce_app/features/auth/application/auth_controller.dart';
 import 'package:e_commerce_app/features/auth/presentation/widgets/auth_header.dart';
@@ -10,9 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:e_commerce_app/features/auth/application/auth_providers.dart';
+import 'package:flutter/services.dart';
+
+import '../auth_ui_helpers.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
-
   const SignupScreen({super.key});
 
   @override
@@ -25,6 +25,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   final _email = TextEditingController();
   final _password = TextEditingController();
   final _confirm = TextEditingController();
+  bool _left = false;
 
   @override
   void dispose() {
@@ -38,43 +39,46 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
     if (!_formKey.currentState!.validate()) return;
-    await ref.read(authControllerProvider.notifier).signUp(
+    final ok = await ref
+        .read(authControllerProvider.notifier)
+        .signUp(
       name: _name.text.trim(),
       email: _email.text.trim(),
       password: _password.text,
     );
+    if (ok) TextInput.finishAutofillContext();
   }
 
 
-@override
-Widget build(BuildContext context) {
-  ref.listen(authUserProvider, (previous, next) {
-    final user = next.value;
-    if (user != null && user.emailVerified && context.canPop()) {
-      context.pop(true);
-    }
-  });
+  @override
+  Widget build(BuildContext context) {
 
-    ref.listen(authControllerProvider, (previous, next) {
-      if(next.hasError && !next.isLoading) {
-        context.showSnack(failureMessage(next.error!), isError: true);
+    ref.listen(authUserProvider, (previous, next) {
+      final user = next.value;
+      if (user != null && user.emailVerified && !_left) {
+        _left = true;
+        leaveAuthFlow(context);
       }
     });
+    ref.listenAuthErrors(context);
 
     final isLoading = ref.watch(authControllerProvider).isLoading;
     return Scaffold(
       appBar: AppBar(),
-      body: SafeArea(child: SingleChildScrollView(
-        padding: const .all(24),
-        child: Form(
-          key: _formKey,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const .all(24),
+          child: AutofillGroup(child: Form(
+            key: _formKey,
             autovalidateMode: .onUserInteraction,
             child: Column(
               crossAxisAlignment: .stretch,
               children: [
-                const AuthHeader(title: 'Create account', subTitle: "We'll email you a link to verify your address.",
+                const AuthHeader(
+                  title: 'Create account',
+                  subTitle: "We'll email you a link to verify your address.",
                 ),
-                const SizedBox(height: 32,),
+                const SizedBox(height: 32),
                 TextFormField(
                   controller: _name,
                   textCapitalization: .words,
@@ -86,7 +90,7 @@ Widget build(BuildContext context) {
                     prefixIcon: Icon(Icons.person_outline_rounded),
                   ),
                 ),
-                const SizedBox(height: 16,),
+                const SizedBox(height: 16),
                 TextFormField(
                   controller: _email,
                   keyboardType: TextInputType.emailAddress,
@@ -96,7 +100,6 @@ Widget build(BuildContext context) {
                   decoration: const InputDecoration(
                     labelText: 'Email',
                     prefixIcon: Icon(Icons.mail_outline_rounded),
-
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -104,11 +107,13 @@ Widget build(BuildContext context) {
                   controller: _password,
                   textInputAction: TextInputAction.next,
                   validator: Validators.password,
+                  autofillHints: const [AutofillHints.newPassword],
                 ),
                 const SizedBox(height: 16),
                 PasswordField(
                   controller: _confirm,
                   label: 'Confirm password',
+                  autofillHints: const [AutofillHints.newPassword],
                   validator: Validators.confirmPassword(() => _password.text),
                   onSubmitted: (_) => _submit(),
                 ),
@@ -137,10 +142,11 @@ Widget build(BuildContext context) {
                   ],
                 ),
               ],
-            )),
-      )),
+            ),
+          ),
+        ),
+      ),
+      ),
     );
-}
-
-
+  }
 }

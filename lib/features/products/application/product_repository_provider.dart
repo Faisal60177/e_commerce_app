@@ -6,7 +6,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'product_repository_provider.g.dart';
 
 @Riverpod(keepAlive: true)
-ProductRepository productRepository(Ref ref){
+ProductRepository productRepository(Ref ref) {
   return ProductRepositoryImpl(ref.watch(dioProvider));
 }
-

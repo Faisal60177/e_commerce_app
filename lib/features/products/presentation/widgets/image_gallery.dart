@@ -36,29 +36,29 @@ class _ImageGalleryState extends State<ImageGallery> {
             width: double.infinity,
             child: images.isEmpty
                 ? Center(
-              child: Icon(
-                Icons.image_not_supported_outlined,
-                size: 48,
-                color: colors.outline,
-              ),
-            )
+                    child: Icon(
+                      Icons.image_not_supported_outlined,
+                      size: 48,
+                      color: colors.outline,
+                    ),
+                  )
                 : PageView.builder(
-              controller: _controller,
-              itemCount: images.length,
-              itemBuilder: (context, index) => Padding(
-                padding: const EdgeInsets.all(16),
-                child: CachedNetworkImage(
-                  imageUrl: images[index],
-                  fit: BoxFit.contain,
-                  placeholder: (context, url) =>
-                  const ShimmerBox(radius: 0),
-                  errorWidget: (context, url, error) => Icon(
-                    Icons.image_not_supported_outlined,
-                    color: colors.outline,
+                    controller: _controller,
+                    itemCount: images.length,
+                    itemBuilder: (context, index) => Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: CachedNetworkImage(
+                        imageUrl: images[index],
+                        fit: BoxFit.contain,
+                        placeholder: (context, url) =>
+                            const ShimmerBox(radius: 0),
+                        errorWidget: (context, url, error) => Icon(
+                          Icons.image_not_supported_outlined,
+                          color: colors.outline,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-              ),
-            ),
           ),
         ),
         if (images.length > 1)

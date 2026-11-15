@@ -28,6 +28,7 @@ abstract final class RoutePaths {
   static const editProfile = '/profile/edit';
   static const changePassword = '/profile/change-password';
   static const settings = '/settings';
+  static const splash = '/splash';
 }
 
 abstract final class RouteNames {
@@ -59,4 +60,6 @@ abstract final class RouteNames {
   static const editProfile = 'edit-profile';
   static const changePassword = 'change-password';
   static const settings = 'settings';
+  static const splash = 'splash';
 }
+

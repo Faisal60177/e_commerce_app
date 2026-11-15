@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class EditProfileScreen  extends ConsumerWidget{
+class EditProfileScreen extends ConsumerWidget {
   const EditProfileScreen({super.key});
 
   @override
@@ -22,21 +22,22 @@ class EditProfileScreen  extends ConsumerWidget{
     final profile = ref.watch(userProfileProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit profile'),),
+      appBar: AppBar(title: const Text('Edit profile')),
       body: user == null
-      ? const SizedBox.shrink()
-      : profile.when(
-        loading: () => const Center(child: CircularProgressIndicator(),),
-        error:(error, stackTrace) => AppErrorView(message: failureMessage(error),
-        onRetry: () => ref.invalidate(userProfileProvider),
-        ),
-        data: (profile) => _EditProfileForm(user: user, profile: profile),
-      ),
+          ? const SizedBox.shrink()
+          : profile.when(
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (error, stackTrace) => AppErrorView(
+                message: failureMessage(error),
+                onRetry: () => ref.invalidate(userProfileProvider),
+              ),
+              data: (profile) => _EditProfileForm(user: user, profile: profile),
+            ),
     );
   }
 }
 
-class _EditProfileForm extends ConsumerStatefulWidget{
+class _EditProfileForm extends ConsumerStatefulWidget {
   const _EditProfileForm({required this.user, required this.profile});
 
   final AppUser user;
@@ -65,83 +66,90 @@ class _EditProfileFormState extends ConsumerState<_EditProfileForm> {
 
   Future<void> _save() async {
     FocusScope.of(context).unfocus();
-    if(!_formKey.currentState!.validate()) return;
+    if (!_formKey.currentState!.validate()) return;
 
     setState(() => _saving = true);
     try {
-      await ref.read(profileActionsProvider).save(
-        name: _name.text,
-        phone: _phone.text,
-        avatarIndex: _avatar,
-      );
-      if(!mounted) return;
+      await ref
+          .read(profileActionsProvider)
+          .save(name: _name.text, phone: _phone.text, avatarIndex: _avatar);
+      if (!mounted) return;
       context
-      ..showSnack('Profile updated')
-      ..pop();
+        ..showSnack('Profile updated')
+        ..pop();
     } on Failure catch (failure) {
-      if(mounted) context.showSnack(failure.message, isError: true);
+      if (mounted) context.showSnack(failure.message, isError: true);
     } finally {
       if (mounted) {
-        setState(() =>
-        _saving = false);
+        setState(() => _saving = false);
       }
     }
   }
-@override
-Widget build(BuildContext context) {
 
-    return SafeArea(child: SingleChildScrollView(
-      padding: const .all(16),
-      child: Form(
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: SingleChildScrollView(
+        padding: const .all(16),
+        child: Form(
           key: _formKey,
           autovalidateMode: .onUserInteraction,
           child: Column(
             crossAxisAlignment: .stretch,
             children: [
               Center(
-                child: ListenableBuilder(listenable: _name, builder: (context, _) => UserAvatar(
+                child: ListenableBuilder(
+                  listenable: _name,
+                  builder: (context, _) => UserAvatar(
                     user: widget.user.copyWith(displayName: _name.text),
-                avatarIndex: _avatar,
-                radius: 48,
-                )),
-              ),
-              const SizedBox(height: 16,),
-              _hasPhoto ?
-                Text('Your photo comes from your Google account.',
-                textAlign: .center,
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colors.outline,
-                ),)
-              : Wrap(
-                  spacing: 12,
-                  runSpacing: 12,
-                  alignment: WrapAlignment.center,
-                  children: [
-                    for(var i = 0; i < AvatarPalette.colors.length; i++)
-                      GestureDetector(
-                        onTap: () => setState(() => _avatar = i),
-                        child: AnimatedContainer(duration: const Duration(milliseconds: 150),
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: AvatarPalette.colors[i],
-                          shape: BoxShape.circle,
-                          border: .all(
-                            color: _avatar == i ? context.colors.onSurface
-                                : Colors.transparent,
-                            width: 3,
-                          )
-                        ),
-                        child: _avatar == i
-                          ? const Icon(Icons.check_rounded,
-                        color: Colors.white,
-                        size: 20,)
-                          : null,
-                        ),
-                      )
-                  ],
+                    avatarIndex: _avatar,
+                    radius: 48,
+                  ),
                 ),
-              const SizedBox(height: 24,),
+              ),
+              const SizedBox(height: 16),
+              _hasPhoto
+                  ? Text(
+                      'Your photo comes from your Google account.',
+                      textAlign: .center,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colors.outline,
+                      ),
+                    )
+                  : Wrap(
+                      spacing: 12,
+                      runSpacing: 12,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        for (var i = 0; i < AvatarPalette.colors.length; i++)
+                          GestureDetector(
+                            onTap: () => setState(() => _avatar = i),
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 150),
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: AvatarPalette.colors[i],
+                                shape: BoxShape.circle,
+                                border: .all(
+                                  color: _avatar == i
+                                      ? context.colors.onSurface
+                                      : Colors.transparent,
+                                  width: 3,
+                                ),
+                              ),
+                              child: _avatar == i
+                                  ? const Icon(
+                                      Icons.check_rounded,
+                                      color: Colors.white,
+                                      size: 20,
+                                    )
+                                  : null,
+                            ),
+                          ),
+                      ],
+                    ),
+              const SizedBox(height: 24),
               TextFormField(
                 controller: _name,
                 textCapitalization: .words,
@@ -149,7 +157,7 @@ Widget build(BuildContext context) {
                 autofillHints: const [AutofillHints.name],
                 validator: Validators.name,
                 decoration: const InputDecoration(
-                  labelText:'Full Name',
+                  labelText: 'Full Name',
                   prefixIcon: Icon(Icons.person_outline_rounded),
                 ),
               ),
@@ -158,7 +166,7 @@ Widget build(BuildContext context) {
                 controller: _phone,
                 keyboardType: TextInputType.phone,
                 textInputAction: .done,
-                autofillHints: const[AutofillHints.telephoneNumber],
+                autofillHints: const [AutofillHints.telephoneNumber],
                 validator: Validators.optionalPhone,
                 onFieldSubmitted: (_) => _save(),
                 decoration: const InputDecoration(
@@ -177,15 +185,19 @@ Widget build(BuildContext context) {
                 ),
               ),
               const SizedBox(height: 24),
-              FilledButton(onPressed: _saving ? null : _save,
-                  child: _saving ? const SizedBox.square(
-                    dimension: 22,
-                    child: CircularProgressIndicator(strokeWidth: 2.5,),
-                  )
-              : const Text('Save changes'),
-              )
+              FilledButton(
+                onPressed: _saving ? null : _save,
+                child: _saving
+                    ? const SizedBox.square(
+                        dimension: 22,
+                        child: CircularProgressIndicator(strokeWidth: 2.5),
+                      )
+                    : const Text('Save changes'),
+              ),
             ],
-          )),
-    ));
-}
+          ),
+        ),
+      ),
+    );
+  }
 }

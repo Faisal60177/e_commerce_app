@@ -1,0 +1,183 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ---------- helpers ----------
+    function isOwner(uid) {
+      return request.auth != null && request.auth.uid == uid;
+    }
+
+    function isStr(value, min, max) {
+      return value is string && value.size() >= min && value.size() <= max;
+    }
+
+    function isInt(value, min, max) {
+      return value is int && value >= min && value <= max;
+    }
+
+    function isMoney(value) {
+      return value is number && value >= 0 && value <= 10000000;
+    }
+
+    function isPercent(value) {
+      return value is number && value >= 0 && value <= 100;
+    }
+
+    // ---------- validators ----------
+    function validProfile(d) {
+      return d.keys().hasOnly(['phone', 'avatarIndex', 'updatedAt'])
+          && isStr(d.get('phone', ''), 0, 30)
+          && isInt(d.get('avatarIndex', 0), 0, 20);
+    }
+
+    function validCartItem(d, id) {
+      return d.keys().hasAll(['productId', 'title', 'price', 'quantity', 'maxQuantity'])
+          && d.keys().hasOnly(['productId', 'title', 'price', 'discountPercentage',
+                               'thumbnail', 'quantity', 'maxQuantity',
+                               'addedAt', 'updatedAt'])
+          && d.productId is int
+          && string(d.productId) == id
+          && isStr(d.title, 1, 300)
+          && isMoney(d.price)
+          && isPercent(d.get('discountPercentage', 0))
+          && isStr(d.get('thumbnail', ''), 0, 500)
+          && isInt(d.maxQuantity, 1, 10)
+          && isInt(d.quantity, 1, 10)
+          && d.quantity <= d.maxQuantity;
+    }
+
+    function validWishlistItem(d, id) {
+      return d.keys().hasAll(['productId', 'title', 'price'])
+          && d.keys().hasOnly(['productId', 'title', 'price', 'thumbnail',
+                               'rating', 'discountPercentage', 'addedAt'])
+          && d.productId is int
+          && string(d.productId) == id
+          && isStr(d.title, 1, 300)
+          && isMoney(d.price)
+          && isStr(d.get('thumbnail', ''), 0, 500)
+          && d.get('rating', 0) is number
+          && isPercent(d.get('discountPercentage', 0));
+    }
+
+    function validAddress(d) {
+      return d.keys().hasAll(['label', 'fullName', 'phone', 'line1', 'city',
+                              'region', 'postalCode', 'country', 'isDefault'])
+          && d.keys().hasOnly(['label', 'fullName', 'phone', 'line1', 'line2',
+                               'city', 'region', 'postalCode', 'country',
+                               'isDefault', 'createdAt', 'updatedAt'])
+          && d.label in ['home', 'work', 'other']
+          && isStr(d.fullName, 2, 100)
+          && isStr(d.phone, 7, 30)
+          && isStr(d.line1, 1, 200)
+          && isStr(d.get('line2', ''), 0, 200)
+          && isStr(d.city, 1, 100)
+          && isStr(d.region, 1, 100)
+          && isStr(d.postalCode, 1, 20)
+          && isStr(d.country, 1, 100)
+          && d.isDefault is bool;
+    }
+
+    function validOrderAddress(a) {
+      return a is map
+          && a.keys().hasOnly(['label', 'fullName', 'phone', 'line1', 'line2',
+                               'city', 'region', 'postalCode', 'country'])
+          && a.label in ['home', 'work', 'other']
+          && isStr(a.fullName, 2, 100)
+          && isStr(a.phone, 7, 30)
+          && isStr(a.line1, 1, 200)
+          && isStr(a.get('line2', ''), 0, 200)
+          && isStr(a.city, 1, 100)
+          && isStr(a.region, 1, 100)
+          && isStr(a.postalCode, 1, 20)
+          && isStr(a.country, 1, 100);
+    }
+
+    function validOrderItem(i) {
+      return i is map
+          && i.keys().hasOnly(['productId', 'title', 'price', 'discountPercentage',
+                               'thumbnail', 'quantity'])
+          && i.productId is int
+          && isStr(i.title, 1, 300)
+          && isMoney(i.price)
+          && isPercent(i.get('discountPercentage', 0))
+          && isInt(i.quantity, 1, 10);
+    }
+
+    // Rules cannot loop over lists, so only the first item is deep-checked.
+    function validNewOrder(d) {
+      return d.keys().hasAll(['status', 'paymentMethod', 'items', 'address',
+                              'itemCount', 'listSubtotal', 'itemsTotal',
+                              'shipping', 'total', 'createdAt', 'updatedAt'])
+          && d.keys().hasOnly(['status', 'paymentMethod', 'items', 'address',
+                               'itemCount', 'listSubtotal', 'itemsTotal',
+                               'shipping', 'total', 'note', 'timeline',
+                               'createdAt', 'updatedAt'])
+          && d.status == 'pending'
+          && d.paymentMethod == 'cashOnDelivery'
+          && d.items is list
+          && d.items.size() >= 1 && d.items.size() <= 50
+          && validOrderItem(d.items[0])
+          && validOrderAddress(d.address)
+          && isInt(d.itemCount, 1, 500)
+          && isMoney(d.listSubtotal)
+          && isMoney(d.itemsTotal)
+          && isMoney(d.shipping)
+          && isMoney(d.total)
+          && d.itemsTotal <= d.listSubtotal + 0.01
+          && math.abs(d.total - (d.itemsTotal + d.shipping)) < 0.011
+          && isStr(d.get('note', ''), 0, 200)
+          && d.get('timeline', {}) is map
+          && d.createdAt == request.time
+          && d.updatedAt == request.time;
+    }
+
+    function validTransition(from, to) {
+      return (from == 'pending' && (to == 'confirmed' || to == 'cancelled'))
+          || (from == 'confirmed' && to == 'shipped')
+          || (from == 'shipped' && to == 'delivered');
+    }
+
+    // Owners may only change status/timeline/updatedAt along valid transitions.
+    // In a real store, only the back office would advance an order past
+    // 'pending' (custom claims or a Cloud Function). Delete the
+    // confirmed/shipped branches above to lock that down for production.
+    function validStatusChange(next, prev) {
+      return next.diff(prev).affectedKeys().hasOnly(['status', 'timeline', 'updatedAt'])
+          && validTransition(prev.status, next.status)
+          && next.updatedAt == request.time;
+    }
+
+    // ---------- collections ----------
+    match /users/{uid} {
+      allow read, delete: if isOwner(uid);
+      allow create, update: if isOwner(uid) && validProfile(request.resource.data);
+
+      match /cart/{productId} {
+        allow read, delete: if isOwner(uid);
+        allow create, update: if isOwner(uid)
+            && validCartItem(request.resource.data, productId);
+      }
+
+      match /wishlist/{productId} {
+        allow read, delete: if isOwner(uid);
+        allow create, update: if isOwner(uid)
+            && validWishlistItem(request.resource.data, productId);
+      }
+
+      match /addresses/{addressId} {
+        allow read, delete: if isOwner(uid);
+        allow create, update: if isOwner(uid)
+            && validAddress(request.resource.data);
+      }
+
+      // Orders are deletable only so "Delete account" can wipe a user's data.
+      match /orders/{orderId} {
+        allow read, delete: if isOwner(uid);
+        allow create: if isOwner(uid) && validNewOrder(request.resource.data);
+        allow update: if isOwner(uid)
+            && validStatusChange(request.resource.data, resource.data);
+      }
+    }
+  }
+}

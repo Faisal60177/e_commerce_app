@@ -1,7 +1,6 @@
 import 'package:intl/intl.dart';
 
 abstract final class Formatters {
-
   static final _currency = NumberFormat.currency(locale: 'en_US', symbol: r'$');
   static final _date = DateFormat.yMMMd();
   static final _dateTime = DateFormat.yMMMd().add_jm();

@@ -5,7 +5,6 @@ import 'package:flutter/foundation.dart';
 import '../constants/api_constants.dart';
 
 Dio createDio() {
-
   final dio = Dio(
     BaseOptions(
       baseUrl: ApiConstants.baseUrl,
@@ -17,10 +16,9 @@ Dio createDio() {
   );
 
   dio.interceptors.addAll([
-    if(kDebugMode) LogInterceptor(),
+    if (kDebugMode) LogInterceptor(),
     RetryInterceptor(dio: dio),
   ]);
 
   return dio;
-
 }

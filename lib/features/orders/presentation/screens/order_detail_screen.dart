@@ -39,9 +39,9 @@ class OrderDetailScreen extends ConsumerWidget {
         ),
         data: (order) => order == null
             ? const AppEmptyView(
-          icon: Icons.receipt_long_outlined,
-          title: 'Order not found',
-        )
+                icon: Icons.receipt_long_outlined,
+                title: 'Order not found',
+              )
             : _OrderBody(order: order),
       ),
     );
@@ -93,7 +93,7 @@ class _OrderBodyState extends ConsumerState<_OrderBody> {
     if (!(confirmed ?? false)) return;
 
     await _run(
-          () => ref.read(orderActionsProvider).cancel(widget.order.id),
+      () => ref.read(orderActionsProvider).cancel(widget.order.id),
       success: 'Order cancelled',
     );
   }
@@ -122,7 +122,10 @@ class _OrderBodyState extends ConsumerState<_OrderBody> {
           ],
         ),
         const SizedBox(height: 20),
-        SectionCard(title: 'Order tracking', child: OrderTimeline(order: order)),
+        SectionCard(
+          title: 'Order tracking',
+          child: OrderTimeline(order: order),
+        ),
         const SizedBox(height: 20),
         SectionCard(
           title: 'Items (${order.itemCount})',
@@ -198,7 +201,8 @@ class _OrderBodyState extends ConsumerState<_OrderBody> {
           FilledButton.tonalIcon(
             onPressed: _busy
                 ? null
-                : () => _run(() => ref.read(orderActionsProvider).advance(order)),
+                : () =>
+                      _run(() => ref.read(orderActionsProvider).advance(order)),
             icon: const Icon(Icons.fast_forward_rounded),
             label: Text('Demo: mark as ${next.label}'),
           ),

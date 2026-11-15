@@ -21,8 +21,9 @@ class FirestoreOrderRepository implements OrderRepository {
   @override
   Stream<List<Order>> watchOrders(String uid) async* {
     try {
-      await for (final snapshot
-      in _orders(uid).orderBy('createdAt', descending: true).snapshots()) {
+      await for (final snapshot in _orders(
+        uid,
+      ).orderBy('createdAt', descending: true).snapshots()) {
         yield snapshot.docs
             .map((doc) => _fromData(doc.id, doc.data()))
             .whereType<Order>()
@@ -70,15 +71,19 @@ class FirestoreOrderRepository implements OrderRepository {
         final snapshot = await transaction.get(ref);
         if (!snapshot.exists) throw const NotFoundFailure();
 
-        final status =
-        OrderStatus.fromName(snapshot.data()?['status'] as String?);
+        final status = OrderStatus.fromName(
+          snapshot.data()?['status'] as String?,
+        );
         if (!status.canCancel) {
-          throw const ValidationFailure('This order can no longer be cancelled.');
+          throw const ValidationFailure(
+            'This order can no longer be cancelled.',
+          );
         }
 
         transaction.update(ref, {
           'status': OrderStatus.cancelled.name,
-          'timeline.${OrderStatus.cancelled.name}': FieldValue.serverTimestamp(),
+          'timeline.${OrderStatus.cancelled.name}':
+              FieldValue.serverTimestamp(),
           'updatedAt': FieldValue.serverTimestamp(),
         });
       });
@@ -147,7 +152,8 @@ class FirestoreOrderRepository implements OrderRepository {
         productId: (map['productId'] as num?)?.toInt() ?? 0,
         title: map['title'] as String? ?? '',
         price: (map['price'] as num?)?.toDouble() ?? 0,
-        discountPercentage: (map['discountPercentage'] as num?)?.toDouble() ?? 0,
+        discountPercentage:
+            (map['discountPercentage'] as num?)?.toDouble() ?? 0,
         thumbnail: map['thumbnail'] as String? ?? '',
         quantity: (map['quantity'] as num?)?.toInt() ?? 1,
       );

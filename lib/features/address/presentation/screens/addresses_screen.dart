@@ -16,10 +16,10 @@ class AddressesScreen extends ConsumerWidget {
   const AddressesScreen({super.key});
 
   Future<void> _delete(
-      BuildContext context,
-      WidgetRef ref,
-      Address address,
-      ) async {
+    BuildContext context,
+    WidgetRef ref,
+    Address address,
+  ) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -47,10 +47,10 @@ class AddressesScreen extends ConsumerWidget {
   }
 
   Future<void> _setDefault(
-      BuildContext context,
-      WidgetRef ref,
-      Address address,
-      ) async {
+    BuildContext context,
+    WidgetRef ref,
+    Address address,
+  ) async {
     try {
       await ref.read(addressActionsProvider).setDefault(address.id);
     } on Failure catch (failure) {
@@ -71,7 +71,7 @@ class AddressesScreen extends ConsumerWidget {
           itemCount: 3,
           separatorBuilder: (context, index) => const SizedBox(height: 12),
           itemBuilder: (context, index) =>
-          const ShimmerBox(height: 170, radius: 16),
+              const ShimmerBox(height: 170, radius: 16),
         ),
         error: (error, stackTrace) => AppErrorView(
           message: failureMessage(error),
@@ -79,27 +79,28 @@ class AddressesScreen extends ConsumerWidget {
         ),
         data: (items) => items.isEmpty
             ? const AppEmptyView(
-          icon: Icons.location_off_outlined,
-          title: 'No saved addresses',
-          subtitle: 'Add an address to speed up checkout.',
-        )
+                icon: Icons.location_off_outlined,
+                title: 'No saved addresses',
+                subtitle: 'Add an address to speed up checkout.',
+              )
             : ListView.separated(
-          padding: const EdgeInsets.all(16),
-          itemCount: items.length,
-          separatorBuilder: (context, index) => const SizedBox(height: 12),
-          itemBuilder: (context, index) {
-            final address = items[index];
-            return AddressCard(
-              address: address,
-              onEdit: () => context.pushNamed(
-                RouteNames.editAddress,
-                pathParameters: {'id': address.id},
+                padding: const EdgeInsets.all(16),
+                itemCount: items.length,
+                separatorBuilder: (context, index) =>
+                    const SizedBox(height: 12),
+                itemBuilder: (context, index) {
+                  final address = items[index];
+                  return AddressCard(
+                    address: address,
+                    onEdit: () => context.pushNamed(
+                      RouteNames.editAddress,
+                      pathParameters: {'id': address.id},
+                    ),
+                    onDelete: () => _delete(context, ref, address),
+                    onSetDefault: () => _setDefault(context, ref, address),
+                  );
+                },
               ),
-              onDelete: () => _delete(context, ref, address),
-              onSetDefault: () => _setDefault(context, ref, address),
-            );
-          },
-        ),
       ),
       bottomNavigationBar: SafeArea(
         child: Padding(

@@ -11,9 +11,12 @@ abstract class AppUser with _$AppUser {
     String? photoUrl,
     @Default(false) bool emailVerified,
     @Default(false) bool hasPassword,
+    @Default(false) bool hasGoogle,
   }) = _AppUser;
 
   const AppUser._();
+
+  bool get needsVerification => !emailVerified;
 
   String get displayLabel {
     final name = displayName?.trim();
@@ -22,5 +25,6 @@ abstract class AppUser with _$AppUser {
     return prefix.isEmpty ? 'Shopper' : prefix;
   }
 
-  String get initial => displayLabel[0].toUpperCase();
+  String get initial =>
+      String.fromCharCode(displayLabel.runes.first).toUpperCase();
 }

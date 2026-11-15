@@ -89,7 +89,7 @@ class _DetailBody extends StatelessWidget {
                     Expanded(
                       child: Text(
                         '${Formatters.rating(product.rating)} '
-                            '(${product.reviews.length} reviews)',
+                        '(${product.reviews.length} reviews)',
                         style: textTheme.bodyMedium,
                       ),
                     ),
@@ -106,7 +106,7 @@ class _DetailBody extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     'You save ${Formatters.price(saved)} '
-                        '(${Formatters.discount(product.discountPercentage)})',
+                    '(${Formatters.discount(product.discountPercentage)})',
                     style: textTheme.bodyMedium?.copyWith(
                       color: AppColors.success,
                     ),

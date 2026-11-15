@@ -22,17 +22,14 @@ abstract class Order with _$Order {
     required DateTime createdAt,
     @Default({}) Map<OrderStatus, DateTime> timeline,
     @Default('') String note,
-}) = _Order;
+  }) = _Order;
 
   const Order._();
 
-  String get number =>
-      (id.length < 8 ? id : id.substring(0, 8)).toUpperCase();
-  int get  itemCount => items.fold(0, (add, item) => add + item.quantity);
+  String get number => (id.length < 8 ? id : id.substring(0, 8)).toUpperCase();
+  int get itemCount => items.fold(0, (add, item) => add + item.quantity);
   double get savings => PriceUtils.roundMoney(listSubtotal - itemsTotal);
 
   DateTime? timeFor(OrderStatus status) =>
       timeline[status] ?? (status == OrderStatus.pending ? createdAt : null);
-
-
 }
