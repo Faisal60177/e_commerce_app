@@ -201,15 +201,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            Text(
-              'Portfolio demo app. Product data comes from DummyJSON, and '
-              'payments are simulated (Cash on Delivery only).',
-              textAlign: TextAlign.center,
-              style: context.textTheme.bodySmall?.copyWith(
-                color: colors.outline,
-              ),
-            ),
-            const SizedBox(height: 16),
           ],
         ),
       ),
