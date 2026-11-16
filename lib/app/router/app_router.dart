@@ -43,9 +43,8 @@ class _AuthRefresh extends ChangeNotifier {
   void notify() => notifyListeners();
 }
 
-bool _isProtected(String location) => _protectedPrefixes.any(
-      (p) => location == p || location.startsWith('$p/'),
-);
+bool _isProtected(String location) =>
+    _protectedPrefixes.any((p) => location == p || location.startsWith('$p/'));
 
 String? _redirect(Ref ref, GoRouterState state) {
   final status = ref.read(authStatusProvider);
@@ -264,7 +263,6 @@ GoRouter appRouter(Ref ref) {
         name: RouteNames.splash,
         builder: (context, state) => const SplashScreen(),
       ),
-
     ],
   );
 

@@ -3,6 +3,7 @@ import 'package:e_commerce_app/features/auth/data/firebase_auth_failure.dart';
 import 'package:e_commerce_app/features/auth/domain/entities/app_user.dart';
 import 'package:e_commerce_app/features/auth/domain/repositories/auth_repository.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 import 'dart:developer' as developer;
 
 import 'google_sign_in_service.dart';
@@ -12,7 +13,6 @@ class FirebaseAuthRepository implements AuthRepository {
 
   final FirebaseAuth _auth;
   final GoogleSignInService _google;
-
 
   @override
   Stream<AppUser?> get userStream => _auth.userChanges().map(_toAppUser);
@@ -32,7 +32,10 @@ class FirebaseAuthRepository implements AuthRepository {
         password: password,
       );
       final user = credential.user!;
-      await _bestEffort(() => user.updateDisplayName(name.trim()), 'updateDisplayName');
+      await _bestEffort(
+        () => user.updateDisplayName(name.trim()),
+        'updateDisplayName',
+      );
       await _bestEffort(user.sendEmailVerification, 'sendEmailVerification');
       await _bestEffort(user.reload, 'reload');
     });
@@ -41,7 +44,10 @@ class FirebaseAuthRepository implements AuthRepository {
   @override
   Future<void> signIn({required String email, required String password}) {
     return _guard(() async {
-      await _auth.signInWithEmailAndPassword(email: email.trim(), password: password);
+      await _auth.signInWithEmailAndPassword(
+        email: email.trim(),
+        password: password,
+      );
     });
   }
 
@@ -113,7 +119,7 @@ class FirebaseAuthRepository implements AuthRepository {
       return _guard(() => _reauthWithPassword(password));
     }
 
-    final credential = await _google.getCredential();
+    final credential = await _guard(_google.getCredential);
     if (credential == null) {
       throw const AuthFailure(
         'Verification was cancelled.',
@@ -172,10 +178,20 @@ class FirebaseAuthRepository implements AuthRepository {
     } on FirebaseAuthException catch (e) {
       throw e.toAuthFailure();
     } on FirebaseException catch (e, st) {
-      developer.log('Firebase error: ${e.code}', name: 'auth', error: e, stackTrace: st);
+      developer.log(
+        'Firebase error: ${e.code}',
+        name: 'auth',
+        error: e,
+        stackTrace: st,
+      );
       throw const AuthFailure('Authentication failed. Please try again.');
     } catch (e, st) {
-      developer.log('Unexpected auth error', name: 'auth', error: e, stackTrace: st);
+      developer.log(
+        'Unexpected auth error',
+        name: 'auth',
+        error: e,
+        stackTrace: st,
+      );
       throw const UnknownFailure();
     }
   }

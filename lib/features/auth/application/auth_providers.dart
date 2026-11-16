@@ -37,6 +37,7 @@ AuthRepository authRepository(Ref ref) {
     ref.watch(googleSignInServiceProvider),
   );
 }
+
 @Riverpod(keepAlive: true)
 GoogleSignInService googleSignInService(Ref ref) {
   return GoogleSignInService(

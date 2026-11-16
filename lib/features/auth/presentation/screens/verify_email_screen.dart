@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:e_commerce_app/core/utils/extensions.dart';
 import 'package:e_commerce_app/features/auth/application/auth_controller.dart';
 import 'package:e_commerce_app/features/auth/application/auth_providers.dart';

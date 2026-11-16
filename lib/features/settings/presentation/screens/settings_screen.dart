@@ -50,7 +50,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SnackBar(content: Text('Your account was deleted')),
         );
     } on Failure catch (failure) {
-      if (mounted) context.showSnack(failure.message, isError: true);
+      final cancelled =
+          failure is AuthFailure && failure.code == AuthFailureCode.cancelled;
+      final wrongPassword =
+          failure is AuthFailure &&
+          failure.code == AuthFailureCode.invalidCredentials;
+      if (mounted && !cancelled) {
+        context.showSnack(
+          wrongPassword ? 'Your password is incorrect.' : failure.message,
+          isError: true,
+        );
+      }
+    } catch (e, st) {
+      debugPrint('deleteAccount failed: $e\n$st');
+      if (mounted) {
+        context.showSnack(
+          'Could not delete your account. Please try again.',
+          isError: true,
+        );
+      }
     } finally {
       if (mounted) setState(() => _busy = false);
     }

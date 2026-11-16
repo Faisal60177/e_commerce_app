@@ -43,17 +43,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final ok = await ref
         .read(authControllerProvider.notifier)
         .signUp(
-      name: _name.text.trim(),
-      email: _email.text.trim(),
-      password: _password.text,
-    );
+          name: _name.text.trim(),
+          email: _email.text.trim(),
+          password: _password.text,
+        );
     if (ok) TextInput.finishAutofillContext();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     ref.listen(authUserProvider, (previous, next) {
       final user = next.value;
       if (user != null && user.emailVerified && !_left) {
@@ -69,85 +67,87 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const .all(24),
-          child: AutofillGroup(child: Form(
-            key: _formKey,
-            autovalidateMode: .onUserInteraction,
-            child: Column(
-              crossAxisAlignment: .stretch,
-              children: [
-                const AuthHeader(
-                  title: 'Create account',
-                  subTitle: "We'll email you a link to verify your address.",
-                ),
-                const SizedBox(height: 32),
-                TextFormField(
-                  controller: _name,
-                  textCapitalization: .words,
-                  textInputAction: .next,
-                  autofillHints: const [AutofillHints.name],
-                  validator: Validators.name,
-                  decoration: const InputDecoration(
-                    labelText: 'Full name',
-                    prefixIcon: Icon(Icons.person_outline_rounded),
+          child: AutofillGroup(
+            child: Form(
+              key: _formKey,
+              autovalidateMode: .onUserInteraction,
+              child: Column(
+                crossAxisAlignment: .stretch,
+                children: [
+                  const AuthHeader(
+                    title: 'Create account',
+                    subTitle: "We'll email you a link to verify your address.",
                   ),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _email,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: .next,
-                  autofillHints: const [AutofillHints.email],
-                  validator: Validators.email,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.mail_outline_rounded),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                PasswordField(
-                  controller: _password,
-                  textInputAction: TextInputAction.next,
-                  validator: Validators.password,
-                  autofillHints: const [AutofillHints.newPassword],
-                ),
-                const SizedBox(height: 16),
-                PasswordField(
-                  controller: _confirm,
-                  label: 'Confirm password',
-                  autofillHints: const [AutofillHints.newPassword],
-                  validator: Validators.confirmPassword(() => _password.text),
-                  onSubmitted: (_) => _submit(),
-                ),
-                const SizedBox(height: 24),
-                AuthSubmitButton(
-                  label: 'Create account',
-                  isLoading: isLoading,
-                  onPressed: _submit,
-                ),
-                const SizedBox(height: 24),
-                SocialAuthSection(
-                  isLoading: isLoading,
-                  onGoogle: () => ref
-                      .read(authControllerProvider.notifier)
-                      .signInWithGoogle(),
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Already have an account?'),
-                    TextButton(
-                      onPressed: () => context.canPop() ? context.pop()
-                      : context.goNamed(RouteNames.login),
-                      child: const Text('Sign in'),
+                  const SizedBox(height: 32),
+                  TextFormField(
+                    controller: _name,
+                    textCapitalization: .words,
+                    textInputAction: .next,
+                    autofillHints: const [AutofillHints.name],
+                    validator: Validators.name,
+                    decoration: const InputDecoration(
+                      labelText: 'Full name',
+                      prefixIcon: Icon(Icons.person_outline_rounded),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(height: 16),
+                  TextFormField(
+                    controller: _email,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: .next,
+                    autofillHints: const [AutofillHints.email],
+                    validator: Validators.email,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(Icons.mail_outline_rounded),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  PasswordField(
+                    controller: _password,
+                    textInputAction: TextInputAction.next,
+                    validator: Validators.password,
+                    autofillHints: const [AutofillHints.newPassword],
+                  ),
+                  const SizedBox(height: 16),
+                  PasswordField(
+                    controller: _confirm,
+                    label: 'Confirm password',
+                    autofillHints: const [AutofillHints.newPassword],
+                    validator: Validators.confirmPassword(() => _password.text),
+                    onSubmitted: (_) => _submit(),
+                  ),
+                  const SizedBox(height: 24),
+                  AuthSubmitButton(
+                    label: 'Create account',
+                    isLoading: isLoading,
+                    onPressed: _submit,
+                  ),
+                  const SizedBox(height: 24),
+                  SocialAuthSection(
+                    isLoading: isLoading,
+                    onGoogle: () => ref
+                        .read(authControllerProvider.notifier)
+                        .signInWithGoogle(),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('Already have an account?'),
+                      TextButton(
+                        onPressed: () => context.canPop()
+                            ? context.pop()
+                            : context.goNamed(RouteNames.login),
+                        child: const Text('Sign in'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
       ),
     );
   }

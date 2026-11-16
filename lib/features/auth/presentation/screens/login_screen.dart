@@ -10,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:e_commerce_app/features/auth/application/auth_providers.dart';
+
 import '../auth_ui_helpers.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -43,10 +44,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (ok) TextInput.finishAutofillContext();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     ref.listen(authUserProvider, (previous, next) {
       final user = next.value;
       if (user != null && user.emailVerified && !_left) {
@@ -56,81 +55,82 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     });
     ref.listenAuthErrors(context);
 
-
     final isLoading = ref.watch(authControllerProvider).isLoading;
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const .all(24),
-          child: AutofillGroup(child:  Form(
-            key: _formKey,
-            autovalidateMode: .onUserInteraction,
-            child: Column(
-              crossAxisAlignment: .stretch,
-              children: [
-                const AuthHeader(
-                  title: 'Welcome back',
-                  subTitle: 'Sign in to continue shopping.',
-                ),
-                const SizedBox(height: 32),
-                TextFormField(
-                  controller: _email,
-                  keyboardType: TextInputType.emailAddress,
-                  textInputAction: .next,
-                  autofillHints: const [AutofillHints.email],
-                  validator: Validators.email,
-                  autocorrect: false,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    prefixIcon: Icon(Icons.mail_outline_rounded),
+          child: AutofillGroup(
+            child: Form(
+              key: _formKey,
+              autovalidateMode: .onUserInteraction,
+              child: Column(
+                crossAxisAlignment: .stretch,
+                children: [
+                  const AuthHeader(
+                    title: 'Welcome back',
+                    subTitle: 'Sign in to continue shopping.',
                   ),
-                ),
-                const SizedBox(height: 16),
-                PasswordField(
-                  controller: _password,
-                  autofillHints: const [AutofillHints.password],
-                  validator: (value) => Validators.required(value, 'Password'),
-                  onSubmitted: (_) => _submit(),
-                ),
-                Align(
-                  alignment: .centerRight,
-                  child: TextButton(
-                    onPressed: () =>
-                        context.pushNamed(RouteNames.forgotPassword),
-                    child: const Text('Forgot password?'),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                AuthSubmitButton(
-                  label: 'Sign in',
-                  isLoading: isLoading,
-                  onPressed: _submit,
-                ),
-                const SizedBox(height: 24),
-                SocialAuthSection(
-                  isLoading: isLoading,
-                  onGoogle: () => ref
-                      .read(authControllerProvider.notifier)
-                      .signInWithGoogle(),
-                ),
-                const SizedBox(height: 24),
-                Row(
-                  mainAxisAlignment: .center,
-                  children: [
-                    const Text("Don't have an account?"),
-                    TextButton(
-                      onPressed: () => context.pushNamed(RouteNames.signup),
-                      child: const Text('Sign up'),
+                  const SizedBox(height: 32),
+                  TextFormField(
+                    controller: _email,
+                    keyboardType: TextInputType.emailAddress,
+                    textInputAction: .next,
+                    autofillHints: const [AutofillHints.email],
+                    validator: Validators.email,
+                    autocorrect: false,
+                    decoration: const InputDecoration(
+                      labelText: 'Email',
+                      prefixIcon: Icon(Icons.mail_outline_rounded),
                     ),
-                  ],
-                ),
-              ],
+                  ),
+                  const SizedBox(height: 16),
+                  PasswordField(
+                    controller: _password,
+                    autofillHints: const [AutofillHints.password],
+                    validator: (value) =>
+                        Validators.required(value, 'Password'),
+                    onSubmitted: (_) => _submit(),
+                  ),
+                  Align(
+                    alignment: .centerRight,
+                    child: TextButton(
+                      onPressed: () =>
+                          context.pushNamed(RouteNames.forgotPassword),
+                      child: const Text('Forgot password?'),
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  AuthSubmitButton(
+                    label: 'Sign in',
+                    isLoading: isLoading,
+                    onPressed: _submit,
+                  ),
+                  const SizedBox(height: 24),
+                  SocialAuthSection(
+                    isLoading: isLoading,
+                    onGoogle: () => ref
+                        .read(authControllerProvider.notifier)
+                        .signInWithGoogle(),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    mainAxisAlignment: .center,
+                    children: [
+                      const Text("Don't have an account?"),
+                      TextButton(
+                        onPressed: () => context.pushNamed(RouteNames.signup),
+                        child: const Text('Sign up'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-      )
     );
   }
 }

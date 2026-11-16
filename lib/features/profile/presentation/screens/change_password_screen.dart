@@ -50,7 +50,17 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
         ..showSnack('Password updated')
         ..pop();
     } on Failure catch (failure) {
-      if (mounted) context.showSnack(failure.message, isError: true);
+      final wrongCurrent =
+          failure is AuthFailure &&
+          failure.code == AuthFailureCode.invalidCredentials;
+      if (mounted) {
+        context.showSnack(
+          wrongCurrent
+              ? 'Your current password is incorrect.'
+              : failure.message,
+          isError: true,
+        );
+      }
     } finally {
       if (mounted) setState(() => _saving = false);
     }

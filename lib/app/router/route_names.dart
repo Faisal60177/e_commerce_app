@@ -62,4 +62,3 @@ abstract final class RouteNames {
   static const settings = 'settings';
   static const splash = 'splash';
 }
-
