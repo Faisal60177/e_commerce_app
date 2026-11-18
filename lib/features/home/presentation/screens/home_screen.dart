@@ -18,6 +18,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/widgets/app_logo.dart';
+
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -34,7 +36,7 @@ class HomeScreen extends ConsumerWidget {
     try {
       await ref.read(productListProvider(_allProducts).future);
     } on Failure {
-      return; // The grid shows its own error state with a retry button.
+      return;
     }
   }
 
@@ -61,12 +63,19 @@ class HomeScreen extends ConsumerWidget {
             slivers: [
               SliverAppBar(
                 floating: true,
-                title: Text(
-                  'ShopEase',
-                  style: context.textTheme.headlineSmall?.copyWith(
-                    color: context.colors.primary,
-                    fontWeight: FontWeight.w800,
-                  ),
+                title: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const AppLogo(size: 32),
+                    const SizedBox(width: 8),
+                    Text(
+                      'ShopEase',
+                      style: context.textTheme.headlineSmall?.copyWith(
+                        color: context.colors.primary,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                  ],
                 ),
               ),
               const SliverPadding(

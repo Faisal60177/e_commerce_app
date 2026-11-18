@@ -46,12 +46,17 @@ class _AddToCartBarState extends ConsumerState<AddToCartBar> {
         ..hideCurrentSnackBar()
         ..showSnackBar(
           SnackBar(
+            persist: false,
+            duration: const Duration(seconds: 3),
+            behavior: SnackBarBehavior.floating,
             content: Text(
               result.limitReached
                   ? 'Maximum quantity per item reached.'
                   : 'Added to cart.',
             ),
-            action: SnackBarAction(
+            action: result.limitReached
+                ? null
+                : SnackBarAction(
               label: 'View cart',
               onPressed: () => router.goNamed(RouteNames.cart),
             ),

@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/widgets/app_logo.dart';
+
 class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({super.key});
 
@@ -104,7 +106,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     return Column(
       crossAxisAlignment: .stretch,
       children: [
-        const SizedBox(height: 32),
+        const SizedBox(height: 16),
+        const Center(child: AppLogo (size: 64)),
+        const SizedBox(height: 24),
         Center(
           child: CircleAvatar(
             radius: 44,

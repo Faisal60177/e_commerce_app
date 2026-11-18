@@ -91,4 +91,4 @@ CI runs formatting, code generation, analysis and tests on every push.
 
 ## Author
 
-**Mohammad Faisal** · [GitHub](https://github.com/Faisal60177) · [LinkedIn](https://linkedin.com/in/YOUR_PROFILE)
+**Mohammad Faisal** · [GitHub](https://github.com/Faisal60177) · [LinkedIn](www.linkedin.com/in/mohammad-faisal-7b65ab3b6)

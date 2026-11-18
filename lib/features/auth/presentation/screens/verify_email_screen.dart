@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:e_commerce_app/core/widgets/app_logo.dart';
 
 import 'package:e_commerce_app/core/utils/extensions.dart';
 import 'package:e_commerce_app/features/auth/application/auth_controller.dart';
@@ -99,6 +100,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen>
               mainAxisSize: .min,
               crossAxisAlignment: .stretch,
               children: [
+                const Center(child: AppLogo (size: 64)),
+                const SizedBox(height: 24),
                 Center(
                   child: CircleAvatar(
                     radius: 44,

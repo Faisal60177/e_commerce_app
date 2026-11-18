@@ -1,4 +1,5 @@
 import 'package:e_commerce_app/core/utils/extensions.dart';
+import 'package:e_commerce_app/core/widgets/app_logo.dart';
 import 'package:flutter/material.dart';
 
 class AuthHeader extends StatelessWidget {
@@ -12,14 +13,7 @@ class AuthHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        CircleAvatar(
-          radius: 28,
-          backgroundColor: context.colors.primaryContainer,
-          child: Icon(
-            Icons.shopping_bag_rounded,
-            color: context.colors.onPrimaryContainer,
-          ),
-        ),
+        const AppLogo(size: 72),
         const SizedBox(height: 24),
         Text(title, style: context.textTheme.headlineMedium),
         const SizedBox(height: 8),
