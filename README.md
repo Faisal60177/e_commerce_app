@@ -6,9 +6,9 @@ A full e-commerce mobile app: product catalog, auth, cart, wishlist, checkout an
 ![Flutter](https://img.shields.io/badge/Flutter-02569B?logo=flutter&logoColor=white)
 ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?logo=firebase&logoColor=black)
 
-| Home | Product | Cart | Orders |
-|---|---|---|---|
-| ![Home](docs/screenshots/home.png) | ![Product](docs/screenshots/product.png) | ![Cart](docs/screenshots/cart.png) | ![Orders](docs/screenshots/orders.png) |
+| Home | Product | Cart | Checkout | Orders |
+|---|---|---|---|---|
+| ![Home](docs/screenshots/home.png) | ![Product](docs/screenshots/product.png) | ![Cart](docs/screenshots/cart.png) | ![Checkout](docs/screenshots/checkout.png) | ![Orders](docs/screenshots/orders.png) |
 
 ## At a glance
 
